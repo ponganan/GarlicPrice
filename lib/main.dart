@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // primarySwatch: Colors.blue,
-        fontFamily: 'notoSansThai',
+        fontFamily: 'NotoSansThai',
         textTheme: TextTheme(
           headlineLarge: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           headlineMedium:

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:garlic_price/list_all_post_page.dart';
+import 'package:garlic_price/price_page.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,16 +16,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final screen = [
-      Center(
-        child:
-            Text('HomePage', style: Theme.of(context).textTheme.headlineMedium),
-      ),
-      Center(
-        child: Text(
-          'Chat',
-          style: TextStyle(fontSize: 70),
-        ),
-      ),
+      PricePage(),
+      ListAllPostPage(),
       Center(
         child: Text(
           'Spaces',
@@ -39,40 +33,27 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
       // extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        leading: Icon(
-          Icons.home_outlined,
-          color: Colors.blue,
-        ),
-        title: Text(
-          'ราคากระเทียมจีน',
-          //style: TextStyle(color: Colors.blue),
-          style: GoogleFonts.notoSansThai(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+
       body: screen[index],
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Colors.blue.shade300,
+          indicatorColor: Colors.blue.shade100,
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              //fontWeight: FontWeight.bold,
+              //fontFamily:
             ),
           ),
         ),
         child: NavigationBar(
           height: 80,
-          backgroundColor: const Color(0xFFA6F415),
+          // backgroundColor: const Color(0xFFf1f5fb),
+          backgroundColor: Colors.blue,
+          //selected
 
           //use to show/hide Icon name
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           //use to slow animation
           animationDuration: const Duration(seconds: 1),
           selectedIndex: index,
@@ -81,24 +62,24 @@ class _HomePageState extends State<HomePage> {
           // ----------
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: ('หน้าแรก'),
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.chat_bubble_outline),
-              selectedIcon: Icon(Icons.chat_bubble),
-              label: ('Chat'),
+              icon: Icon(Icons.attach_money_outlined),
+              selectedIcon: Icon(Icons.attach_money),
+              label: ('ราคา'),
             ),
             NavigationDestination(
               icon: Icon(Icons.group_outlined),
               selectedIcon: Icon(Icons.group),
-              label: ('Spaces'),
+              label: ('ประกาศ'),
             ),
             NavigationDestination(
-              icon: Icon(Icons.videocam_outlined, size: 50),
-              selectedIcon: Icon(Icons.videocam, size: 50),
-              label: ('Meet'),
+              icon: Icon(Icons.chat_bubble_outline),
+              selectedIcon: Icon(Icons.chat_bubble),
+              label: ('แชท'),
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person),
+              label: ('Profile'),
             ),
           ],
         ),
