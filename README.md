@@ -1,4 +1,4 @@
-# garlic_price
+# ราคากระเทียมจีน
 
 Discover domestic price data for wholesale prices of Fresh Garlic
 
