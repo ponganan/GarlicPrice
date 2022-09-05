@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:garlic_price/check_user_login_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
-import 'package:garlic_price/price_page.dart';
-//import 'package:google_fonts/google_fonts.dart';
+import 'package:garlic_price/list_garlic_price.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,74 +12,59 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int index = 0;
-
+  final screen = [
+    ListGarlicPrice(),
+    ListAllPostPage(),
+    Center(
+      child: Text('Chat'),
+    ),
+    CheckUserLoginPage(),
+  ];
   @override
   Widget build(BuildContext context) {
-    final screen = [
-      PricePage(),
-      ListAllPostPage(),
-      Center(
-        child: Text(
-          'Spaces',
-          style: TextStyle(fontSize: 70),
-        ),
-      ),
-      Center(
-        child: Text(
-          'Meet',
-          style: TextStyle(fontSize: 71),
-        ),
-      ),
-    ];
     return Scaffold(
-      // extendBodyBehindAppBar: true,
-
       body: screen[index],
+      // warp widget with NavigationBarTheme
       bottomNavigationBar: NavigationBarTheme(
+        //have to set data:
         data: NavigationBarThemeData(
+          //set theme colors
           indicatorColor: Colors.blue.shade100,
+
           labelTextStyle: MaterialStateProperty.all(
-            const TextStyle(
-              fontSize: 16,
-              //fontWeight: FontWeight.bold,
-              //fontFamily:
-            ),
+            const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ),
         child: NavigationBar(
           height: 80,
-          // backgroundColor: const Color(0xFFf1f5fb),
-          backgroundColor: Colors.blue,
-          //selected
-
-          //use to show/hide Icon name
-          //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          //use to slow animation
-          animationDuration: const Duration(seconds: 1),
+          backgroundColor: Color(0xFFf1f5fb),
           selectedIndex: index,
-          //-----------use for get select bar from user
-          onDestinationSelected: (index) => setState(() => this.index = index),
-          // ----------
+          //use labelBehavior for hidden or unhidden text
+          //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          animationDuration: Duration(seconds: 1),
+          onDestinationSelected: (index) => setState(
+            () => this.index = index,
+          ),
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.attach_money_outlined),
-              selectedIcon: Icon(Icons.attach_money),
-              label: ('ราคา'),
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'หน้าแรก',
             ),
             NavigationDestination(
-              icon: Icon(Icons.group_outlined),
-              selectedIcon: Icon(Icons.group),
-              label: ('ประกาศ'),
+              icon: Icon(Icons.shopping_bag_outlined),
+              selectedIcon: Icon(Icons.shopping_bag),
+              label: 'ประกาศ',
             ),
             NavigationDestination(
-              icon: Icon(Icons.chat_bubble_outline),
-              selectedIcon: Icon(Icons.chat_bubble),
-              label: ('แชท'),
+              icon: Icon(Icons.chat_outlined),
+              selectedIcon: Icon(Icons.chat),
+              label: 'แชท',
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: ('Profile'),
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle),
+              label: 'บัญชี',
             ),
           ],
         ),

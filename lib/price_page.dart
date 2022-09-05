@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PricePage extends StatefulWidget {
@@ -8,6 +9,7 @@ class PricePage extends StatefulWidget {
 }
 
 class _PricePageState extends State<PricePage> {
+  // final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +25,9 @@ class _PricePageState extends State<PricePage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+      ),
+      body: Center(
+        child: Text('สวัสดีคุณ.. '),
       ),
     );
   }

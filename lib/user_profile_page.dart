@@ -1,34 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ListAllPostPage extends StatefulWidget {
-  const ListAllPostPage({Key? key}) : super(key: key);
+class UserProfilePage extends StatefulWidget {
+  const UserProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ListAllPostPage> createState() => _ListAllPostPageState();
+  State<UserProfilePage> createState() => _UserProfilePage();
 }
 
-class _ListAllPostPageState extends State<ListAllPostPage> {
+class _UserProfilePage extends State<UserProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
-  @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        // leading: const Icon(
-        //  Icons.home_outlined,
-        //  color: Colors.blue,
-        // ),
-        title: const Text(
-          'ประกาศ',
-          //style: TextStyle(color: Colors.blue),
-          style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: Text('User Profile Page'),
       ),
       body: Center(
         child: Column(children: [
