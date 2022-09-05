@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garlic_price/check_user_login_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
-import 'package:garlic_price/list_garlic_price.dart';
+import 'package:garlic_price/list_price.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 0;
   final screen = [
-    ListGarlicPrice(),
+    ListPrice(),
     ListAllPostPage(),
     Center(
       child: Text('Chat'),

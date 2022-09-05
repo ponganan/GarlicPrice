@@ -34,7 +34,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
         child: Column(children: [
           const SizedBox(height: 28),
           Text(
-            'Signed In as : ' + user.email! + ' and UID : ' + user.uid,
+            'Signed In as : ' + user.email! + ' and. UID : ' + user.uid,
             style: const TextStyle(fontSize: 20),
           ),
           const SizedBox(height: 15),

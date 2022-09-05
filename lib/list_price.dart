@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class PricePage extends StatefulWidget {
-  const PricePage({Key? key}) : super(key: key);
+class ListPrice extends StatefulWidget {
+  const ListPrice({Key? key}) : super(key: key);
 
   @override
-  State<PricePage> createState() => _PricePageState();
+  State<ListPrice> createState() => _ListPriceState();
 }
 
-class _PricePageState extends State<PricePage> {
+class _ListPriceState extends State<ListPrice> {
   // final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
