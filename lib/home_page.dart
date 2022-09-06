@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int index = 0;
-  final screen = [
+  final screen = const [
     ListPrice(),
     ListAllPostPage(),
     Center(
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           selectedIndex: index,
           //use labelBehavior for hidden or unhidden text
           //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          animationDuration: Duration(seconds: 1),
+          animationDuration: const Duration(seconds: 1),
           onDestinationSelected: (index) => setState(
             () => this.index = index,
           ),

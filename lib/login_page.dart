@@ -34,29 +34,31 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[300],
+      backgroundColor: Colors.white70,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.fastfood,
-                  size: 150,
-                ),
-                const SizedBox(height: 30),
+                //const Icon(
+                //  Icons.fastfood,
+                //  size: 150,
+                //  ),
+
                 //Hello
                 Text(
-                  'Hello',
-                  style: GoogleFonts.bebasNeue(fontSize: 56),
+                  'เข้าสู่ระบบ',
+                  style: TextStyle(
+                    fontSize: 56,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  // 'Welcome back, you\'ve been missed!!',
-                  'Welcome To JJ Food Delivery',
+                  ' ราคากระเทียมจีน',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -132,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Sign In',
+                              'เข้าสู่ระบบ',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -149,11 +151,11 @@ class _LoginPageState extends State<LoginPage> {
                 GestureDetector(
                   child: RichText(
                     text: TextSpan(
-                      text: ('Forgot Password'),
+                      text: ('ลืมรหัสผ่าน'),
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Theme.of(context).colorScheme.secondary),
                     ),
                   ),
@@ -167,20 +169,20 @@ class _LoginPageState extends State<LoginPage> {
                 //register
                 RichText(
                   text: TextSpan(
-                      text: ('No Account ?  '),
+                      text: ('ยังไม่มี Account ?  '),
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
+                        color: Colors.black,
+                        fontSize: 18,
                       ),
                       children: [
                         TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = widget.onClickedSignUp,
-                          text: ('Sign Up'),
+                          text: ('ลงทะเบียน'),
                           style: TextStyle(
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: 18,
                               color: Theme.of(context).colorScheme.secondary),
                         ),
                       ]),

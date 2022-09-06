@@ -25,6 +25,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
           style: TextStyle(
             color: Colors.blue,
             fontWeight: FontWeight.bold,
+            fontSize: 25,
           ),
         ),
         backgroundColor: Colors.transparent,

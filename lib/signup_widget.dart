@@ -38,7 +38,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[300],
+      backgroundColor: Colors.white70,
       body: SafeArea(
         child: Form(
           key: formKey,
@@ -47,22 +47,20 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.fastfood,
-                    size: 150,
-                  ),
                   const SizedBox(height: 30),
                   //Hello
-                  Text(
-                    'Hello',
-                    style: GoogleFonts.bebasNeue(fontSize: 56),
+                  const Text(
+                    'ลงทะเบียน',
+                    style: TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    // 'Welcome back, you\'ve been missed!!',
-                    'Welcome To JJ Food Delivery',
+                    ' ราคากระเทียมจีน',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -186,7 +184,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                               Icon(Icons.arrow_forward),
                               SizedBox(width: 10),
                               Text(
-                                'Sign Up',
+                                'ลงทะเบียน',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -201,20 +199,20 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   //register
                   RichText(
                     text: TextSpan(
-                        text: ('Ready Have Account ?  '),
+                        text: ('มี Account แล้ว ?  '),
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
+                          color: Colors.black,
+                          fontSize: 18,
                         ),
                         children: [
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = widget.onClickedSignIn,
-                            text: ('Sign In'),
+                            text: ('เข้าสู่ระบบ'),
                             style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 18,
                                 color: Theme.of(context).colorScheme.secondary),
                           ),
                         ]),

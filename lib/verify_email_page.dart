@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garlic_price/home_page.dart';
-import 'package:garlic_price/list_all_post_page.dart';
 import 'package:garlic_price/model/utils.dart';
 
 class VerifyEmailPage extends StatefulWidget {
