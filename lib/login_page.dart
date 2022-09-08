@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:garlic_price/model/utils.dart';
 
 import 'forgot_password_page.dart';
@@ -47,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                 //  ),
 
                 //Hello
-                Text(
+                const Text(
                   'เข้าสู่ระบบ',
                   style: TextStyle(
                     fontSize: 56,
@@ -170,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                 RichText(
                   text: TextSpan(
                       text: ('ยังไม่มี Account ?  '),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                       ),

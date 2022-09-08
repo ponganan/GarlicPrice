@@ -4,8 +4,6 @@ import 'package:garlic_price/home_page.dart';
 
 import 'package:garlic_price/verify_email_page.dart';
 
-import 'package:garlic_price/auth_page.dart';
-
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -18,11 +16,11 @@ class MainPage extends StatelessWidget {
         //check session user login on Firebase or not
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Someting went wrong !!'),
+            return const Center(
+              child: Text('Something went wrong !!'),
             );
           }
           //check user login or not

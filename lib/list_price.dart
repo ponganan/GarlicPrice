@@ -33,7 +33,7 @@ class _ListPriceState extends State<ListPrice> {
         elevation: 0,
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 20.0),
+        margin: const EdgeInsets.symmetric(vertical: 20.0),
         child: StreamBuilder<List<ListPriceModel>>(
           stream: readUser(),
           builder: (context, snapshot) {
@@ -61,7 +61,7 @@ class _ListPriceState extends State<ListPrice> {
           leading: Text(
             convertDatetime
                 .formattedDate(price.dateTime.millisecondsSinceEpoch),
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           title: CircleAvatar(child: Text('${price.price}')),
 

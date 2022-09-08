@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: NavigationBar(
           height: 80,
-          backgroundColor: Color(0xFFf1f5fb),
+          backgroundColor: const Color(0xFFf1f5fb),
           selectedIndex: index,
           //use labelBehavior for hidden or unhidden text
           //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,

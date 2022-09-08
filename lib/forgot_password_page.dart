@@ -18,6 +18,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   void dispose() {
+    super.dispose();
     emailController.dispose();
   }
 
@@ -26,7 +27,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: Text('Reset Password'),
+        title: const Text('Reset Password'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -37,12 +38,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'กรุณากรอก Email\n เพื่อตั้งค่ารหัสผ่านใหม่',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
@@ -70,17 +71,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               //use icon as button
               Padding(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.fromHeight(50),
                     backgroundColor: Colors.deepPurpleAccent,
                   ),
-                  icon: Icon(Icons.email_outlined),
-                  label: Text(
+                  icon: const Icon(Icons.email_outlined),
+                  label: const Text(
                     'Reset Password',
                     style: TextStyle(fontSize: 20),
                   ),

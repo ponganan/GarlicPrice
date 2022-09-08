@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:garlic_price/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:garlic_price/model/utils.dart';
 
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         // primarySwatch: Colors.blue,
         fontFamily: 'NotoSansThai',
       ),
-      home: MainPage(),
+      home: const MainPage(),
     );
   }
 }
