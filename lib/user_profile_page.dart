@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePage extends State<UserProfilePage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final userFirebase = FirebaseAuth.instance.currentUser!;
 
   final _controllerName = TextEditingController();
   final _controllerTel = TextEditingController();
@@ -70,7 +71,20 @@ class _UserProfilePage extends State<UserProfilePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                final userAddUser = UserAddUser(
+                  //get value from name TextField
+                  name: _controllerName.text,
+                  //get int value to string
+                  tel: int.parse(_controllerTel.text),
+                  //get date value to string
+                  // birthday: DateTime.parse(controllerDate.text),
+                  city: _controllerCity.text,
+                );
+                createUserAddUser(userAddUser);
+
+                Navigator.pop(context);
+              },
               color: Colors.green[200],
               child: const Text(
                 'Save',
@@ -93,4 +107,35 @@ class _UserProfilePage extends State<UserProfilePage> {
 
         border: const OutlineInputBorder(),
       );
+
+  Future createUserAddUser(UserAddUser userAddUser) async {
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+    //add id from Firebase Auth id
+    userAddUser.id = docUser.id;
+    //userAddUser.id = userFirebase.uid;
+
+    final json = userAddUser.toJson();
+    await docUser.set(json);
+  }
+}
+
+class UserAddUser {
+  String id;
+  final String name;
+  final int tel;
+  final String city;
+
+  UserAddUser({
+    this.id = '',
+    required this.name,
+    required this.tel,
+    required this.city,
+  });
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'tel': tel,
+        'city': city,
+      };
 }

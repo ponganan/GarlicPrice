@@ -1,5 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'model/user_list.dart';
 
 class ListAllPostPage extends StatefulWidget {
   const ListAllPostPage({Key? key}) : super(key: key);
@@ -9,7 +11,7 @@ class ListAllPostPage extends StatefulWidget {
 }
 
 class _ListAllPostPageState extends State<ListAllPostPage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  //final userAccount = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,23 +33,34 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Center(
-        child: Column(children: [
-          const SizedBox(height: 28),
-          Text(
-            'Signed In as : ${user.email!} and. UID : ${user.uid}',
-            style: const TextStyle(fontSize: 20),
-          ),
-          const SizedBox(height: 15),
-          MaterialButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            color: Colors.green[200],
-            child: const Text('Sign Out'),
-          ),
-        ]),
+      body: StreamBuilder<List<UserList>>(
+        stream: readUser(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went Wrong!!! ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            final user = snapshot.data!;
+
+            return ListView(
+              children: user.map(buildUser).toList(),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
+
+  Widget buildUser(UserList user) => ListTile(
+        leading: CircleAvatar(child: Text('${user.tel}')),
+        title: Text(user.name),
+        subtitle: Text(user.city),
+      );
+
+  Stream<List<UserList>> readUser() => FirebaseFirestore.instance
+      .collection('users')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
 }
