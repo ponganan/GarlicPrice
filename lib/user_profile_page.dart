@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garlic_price/user_detail_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePage extends State<UserProfilePage> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
 
+  final formKey = GlobalKey<FormState>();
   final _controllerName = TextEditingController();
   final _controllerTel = TextEditingController();
   final _controllerCity = TextEditingController();
@@ -21,88 +23,138 @@ class _UserProfilePage extends State<UserProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'User Profile Page',
+          'รายละเอียดบัญชี',
         ),
         actions: [
           Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                 },
-                child: Icon(Icons.logout),
+                child: const Icon(Icons.logout),
               )),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(15),
-        children: <Widget>[
-          const SizedBox(height: 28),
-          Text(
-            'ตั้งค่าบัญชี',
-            style: const TextStyle(fontSize: 22),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: TextField(
-              controller: _controllerName,
-              decoration: decorationTF('ชื่อ'),
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(15),
+          children: <Widget>[
+            const SizedBox(height: 28),
+            const Text(
+              'ตั้งค่าบัญชี',
+              style: TextStyle(fontSize: 22),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: TextField(
-              controller: _controllerTel,
-              decoration: decorationTF('เบอร์โทร'),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: TextFormField(
+                controller: _controllerName,
+                decoration: decorationTF('ชื่อ'),
+                //autovalidateMode for automatic validate value
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'กรุณากรอกชื่อ' : null,
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: TextField(
-              controller: _controllerCity,
-              decoration: decorationTF('จังหวัด'),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: TextFormField(
+                controller: _controllerTel,
+                keyboardType: TextInputType.number,
+                decoration: decorationTF('เบอร์โทร'),
+                //autovalidateMode for automatic validate value
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'กรุณากรอกเบอร์โทร' : null,
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: MaterialButton(
-              onPressed: () {
-                final userAddUser = UserAddUser(
-                  //get value from name TextField
-                  name: _controllerName.text,
-                  //get int value to string
-                  tel: int.parse(_controllerTel.text),
-                  //get date value to string
-                  // birthday: DateTime.parse(controllerDate.text),
-                  city: _controllerCity.text,
-                );
-                createUserAddUser(userAddUser);
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: TextFormField(
+                controller: _controllerCity,
+                decoration: decorationTF('จังหวัด'),
+                //autovalidateMode for automatic validate value
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'กรุณากรอกจังหวัด' : null,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: MaterialButton(
+                onPressed: () {
+                  //if formKey validate
+                  if (formKey.currentState!.validate()) {
+                    final userAddUser = UserAddUser(
+                      //get value from name TextField
+                      name: _controllerName.text,
+                      //get int value to string
+                      tel: int.parse(_controllerTel.text),
+                      //get date value to string
+                      // birthday: DateTime.parse(controllerDate.text),
+                      city: _controllerCity.text,
+                    );
 
-                Navigator.pop(context);
-              },
-              color: Colors.green[200],
-              child: const Text(
-                'Save',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                    createUserAddUser(userAddUser);
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const UserDetailPage();
+                        },
+                      ),
+                    );
+                  }
+                },
+                color: Colors.green[200],
+                child: const Text(
+                  'Save',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const UserDetailPage();
+                      },
+                    ),
+                  );
+                },
+                color: Colors.green[200],
+                child: const Text(
+                  'ดูข้อมูลบัญชี',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   InputDecoration decorationTF(String label) => InputDecoration(
         labelText: label,
-        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         //use OutlineInputBorder to Border all Textfield
 
         border: const OutlineInputBorder(),
@@ -132,6 +184,7 @@ class UserAddUser {
     required this.tel,
     required this.city,
   });
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,

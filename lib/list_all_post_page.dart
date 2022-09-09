@@ -22,7 +22,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
         //  color: Colors.blue,
         // ),
         title: const Text(
-          'ประกาศ',
+          'ประกาศ ซื้อ - ขาย',
           //style: TextStyle(color: Colors.blue),
           style: TextStyle(
             color: Colors.blue,

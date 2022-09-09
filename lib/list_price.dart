@@ -35,15 +35,15 @@ class _ListPriceState extends State<ListPrice> {
       body: Container(
         margin: const EdgeInsets.symmetric(vertical: 20.0),
         child: StreamBuilder<List<ListPriceModel>>(
-          stream: readUser(),
+          stream: readPrice(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went Wrong!!! ${snapshot.error}');
             } else if (snapshot.hasData) {
-              final user = snapshot.data!;
+              final price = snapshot.data!;
 
               return ListView(
-                children: user.map(buildUser).toList(),
+                children: price.map(buildPrice).toList(),
               );
             } else {
               return const Center(child: CircularProgressIndicator());
@@ -54,7 +54,7 @@ class _ListPriceState extends State<ListPrice> {
     );
   }
 
-  Widget buildUser(ListPriceModel price) => Padding(
+  Widget buildPrice(ListPriceModel price) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
         child: ListTile(
           // call DateTime format Function
@@ -69,8 +69,10 @@ class _ListPriceState extends State<ListPrice> {
         ),
       );
 
-  Stream<List<ListPriceModel>> readUser() => FirebaseFirestore.instance
+  Stream<List<ListPriceModel>> readPrice() => FirebaseFirestore.instance
       .collection('price')
+      //sort datetime
+      .orderBy('datetime', descending: true)
       .snapshots()
       .map((snapshot) => snapshot.docs
           .map((doc) => ListPriceModel.fromJson(doc.data()))
