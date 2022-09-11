@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:garlic_price/user_detail_page.dart';
 
@@ -12,6 +15,8 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePage extends State<UserProfilePage> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
+
+  PlatformFile? pickedFile;
 
   final formKey = GlobalKey<FormState>();
   final _controllerName = TextEditingController();
@@ -42,10 +47,27 @@ class _UserProfilePage extends State<UserProfilePage> {
           padding: const EdgeInsets.all(15),
           children: <Widget>[
             const SizedBox(height: 28),
-            const Text(
-              'ตั้งค่าบัญชี',
-              style: TextStyle(fontSize: 22),
-              textAlign: TextAlign.center,
+            if (pickedFile != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: GestureDetector(
+                  onTap: () {
+                    selectFile();
+                  },
+                  child: Image.file(
+                    File(pickedFile!.path!),
+                    width: double.infinity,
+                  ),
+                ),
+              ),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: IconButton(
+                icon: const Icon(Icons.camera_alt_outlined),
+                iconSize: 35,
+                onPressed: selectFile,
+              ),
             ),
             const SizedBox(height: 15),
             Padding(
@@ -102,6 +124,8 @@ class _UserProfilePage extends State<UserProfilePage> {
                     );
 
                     createUserAddUser(userAddUser);
+                    //upload picture
+                    uploadFile();
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -169,6 +193,25 @@ class _UserProfilePage extends State<UserProfilePage> {
 
     final json = userAddUser.toJson();
     await docUser.set(json);
+  }
+
+  //select picture function
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  //upload picture to FireStore
+  Future uploadFile() async {
+    //add firebase Auth id to rename profile picture
+    final path = 'picture/${userFirebase.uid}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    ref.putFile(file);
   }
 }
 
