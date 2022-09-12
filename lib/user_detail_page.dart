@@ -46,6 +46,21 @@ class _UserDetailPageState extends State<UserDetailPage> {
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 30),
         child: Column(
           children: [
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 85,
+                  backgroundColor: Colors.blue,
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(user.userPic.toString()),
+                    radius: 80,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 25),
             Row(
               children: [
                 const Text(

@@ -4,32 +4,32 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:garlic_price/user_detail_page.dart';
+import 'package:garlic_price/home_page.dart';
+import 'package:garlic_price/list_all_post_page.dart';
 
-class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({Key? key}) : super(key: key);
+class AddPostPage extends StatefulWidget {
+  const AddPostPage({Key? key}) : super(key: key);
 
   @override
-  State<UserProfilePage> createState() => _UserProfilePage();
+  State<AddPostPage> createState() => _AddPostPage();
 }
 
-class _UserProfilePage extends State<UserProfilePage> {
+class _AddPostPage extends State<AddPostPage> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
 
   PlatformFile? pickedFile;
-  String? downloadURL;
+  String? picPostURL;
+  UploadTask? uploadTask;
 
   final formKey = GlobalKey<FormState>();
-  final _controllerName = TextEditingController();
-  final _controllerTel = TextEditingController();
-  final _controllerCity = TextEditingController();
+  final _controllerTopic = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'รายละเอียดบัญชี',
+          'เพิ่มประกาศ ซื้อ - ขาย',
         ),
         actions: [
           Padding(
@@ -74,37 +74,12 @@ class _UserProfilePage extends State<UserProfilePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: TextFormField(
-                controller: _controllerName,
-                decoration: decorationTF('ชื่อ'),
+                controller: _controllerTopic,
+                decoration: decorationTF('ข้อความที่ต้องการประกาศ'),
                 //autovalidateMode for automatic validate value
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
-                    value == null || value.isEmpty ? 'กรุณากรอกชื่อ' : null,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: TextFormField(
-                controller: _controllerTel,
-                keyboardType: TextInputType.number,
-                decoration: decorationTF('เบอร์โทร'),
-                //autovalidateMode for automatic validate value
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'กรุณากรอกเบอร์โทร' : null,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: TextFormField(
-                controller: _controllerCity,
-                decoration: decorationTF('จังหวัด'),
-                //autovalidateMode for automatic validate value
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'กรุณากรอกจังหวัด' : null,
+                    value == null || value.isEmpty ? 'กรุณาระบุข้อความ' : null,
               ),
             ),
             const SizedBox(height: 15),
@@ -114,25 +89,20 @@ class _UserProfilePage extends State<UserProfilePage> {
                 onPressed: () {
                   //if formKey validate
                   if (formKey.currentState!.validate()) {
-                    final userAddUser = UserAddUser(
+                    final userAddTopic = AddTopic(
                       //get value from name TextField
-                      name: _controllerName.text,
-                      //get int value to string
-                      tel: int.parse(_controllerTel.text),
-                      //get date value to string
-                      // birthday: DateTime.parse(controllerDate.text),
-                      city: _controllerCity.text,
+                      topic: _controllerTopic.text,
                     );
 
                     //upload picture
                     uploadFile();
 
-                    createUserAddUser(userAddUser);
+                    createAddTopic(userAddTopic);
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return const UserDetailPage();
+                          return const HomePage();
                         },
                       ),
                     );
@@ -141,29 +111,6 @@ class _UserProfilePage extends State<UserProfilePage> {
                 color: Colors.green[200],
                 child: const Text(
                   'Save',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return const UserDetailPage();
-                      },
-                    ),
-                  );
-                },
-                color: Colors.green[200],
-                child: const Text(
-                  'ดูข้อมูลบัญชี',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -186,16 +133,15 @@ class _UserProfilePage extends State<UserProfilePage> {
         border: const OutlineInputBorder(),
       );
 
-  Future createUserAddUser(UserAddUser userAddUser) async {
-    final docUser =
-        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+  Future createAddTopic(AddTopic userAddTopic) async {
+    final docTopic = FirebaseFirestore.instance.collection('postsell').doc();
     //add id from Firebase Auth id
-    userAddUser.id = docUser.id;
-    userAddUser.userPic = downloadURL!;
+    userAddTopic.id = docTopic.id;
+    userAddTopic.topicPic = picPostURL!;
     //userAddUser.id = userFirebase.uid;
 
-    final json = userAddUser.toJson();
-    await docUser.set(json);
+    final json = userAddTopic.toJson();
+    await docTopic.set(json);
   }
 
   //select picture function
@@ -210,37 +156,33 @@ class _UserProfilePage extends State<UserProfilePage> {
   //upload picture to FireStore
   Future uploadFile() async {
     //add firebase Auth id to rename profile picture
-    final path = 'picture/${userFirebase.uid}';
+    final path = 'postpicture/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
-    ref.putFile(file);
+    uploadTask = ref.putFile(file);
 
-    downloadURL = await ref.getDownloadURL();
-    print(downloadURL);
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final picPostURL = await snapshot.ref.getDownloadURL();
+    print('download link: $picPostURL');
   }
 }
 
-class UserAddUser {
+class AddTopic {
   String id;
-  String userPic;
-  final String name;
-  final int tel;
-  final String city;
+  String topicPic;
+  final String topic;
 
-  UserAddUser({
+  AddTopic({
     this.id = '',
-    this.userPic = '',
-    required this.name,
-    required this.tel,
-    required this.city,
+    this.topicPic = '',
+    required this.topic,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'userpic': userPic,
-        'name': name,
-        'tel': tel,
-        'city': city,
+        'topicpic': topicPic,
+        'topic': topic,
       };
 }
