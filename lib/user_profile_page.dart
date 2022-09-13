@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:garlic_price/upload_profile_picture.dart';
 import 'package:garlic_price/user_detail_page.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -47,7 +48,7 @@ class _UserProfilePage extends State<UserProfilePage> {
         child: ListView(
           padding: const EdgeInsets.all(15),
           children: <Widget>[
-            const SizedBox(height: 28),
+            const SizedBox(height: 15),
             if (pickedFile != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -64,10 +65,32 @@ class _UserProfilePage extends State<UserProfilePage> {
             const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: IconButton(
-                icon: const Icon(Icons.camera_alt_outlined),
-                iconSize: 35,
-                onPressed: selectFile,
+              child: Center(
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const UploadProfilePicture();
+                      },
+                    ),
+                  ),
+                  child: Stack(children: const [
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage("assets/images/profile.png"),
+                      radius: 60,
+                    ),
+                    Positioned(
+                      bottom: 3,
+                      right: 45,
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 25,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ]),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -125,7 +148,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     );
 
                     //upload picture
-                    uploadFile();
+                    //uploadFile();
 
                     createUserAddUser(userAddUser);
 
@@ -191,7 +214,7 @@ class _UserProfilePage extends State<UserProfilePage> {
         FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
     //add id from Firebase Auth id
     userAddUser.id = docUser.id;
-    userAddUser.userPic = downloadURL!;
+    userAddUser.userPic = 'downloadURL!';
     //userAddUser.id = userFirebase.uid;
 
     final json = userAddUser.toJson();
