@@ -82,7 +82,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  user.tel.toString(),
+                  user.tel,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),

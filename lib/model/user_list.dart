@@ -2,7 +2,7 @@ class UserList {
   String id;
   final String userPic;
   final String name;
-  final int tel;
+  final String tel;
   final String city;
 
   UserList({

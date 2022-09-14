@@ -49,20 +49,6 @@ class _UserProfilePage extends State<UserProfilePage> {
           padding: const EdgeInsets.all(15),
           children: <Widget>[
             const SizedBox(height: 15),
-            if (pickedFile != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: GestureDetector(
-                  onTap: () {
-                    selectFile();
-                  },
-                  child: Image.file(
-                    File(pickedFile!.path!),
-                    width: double.infinity,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Center(
@@ -141,7 +127,8 @@ class _UserProfilePage extends State<UserProfilePage> {
                       //get value from name TextField
                       name: _controllerName.text,
                       //get int value to string
-                      tel: int.parse(_controllerTel.text),
+                      //tel: int.parse(_controllerTel.text),
+                      tel: _controllerTel.text,
                       //get date value to string
                       // birthday: DateTime.parse(controllerDate.text),
                       city: _controllerCity.text,
@@ -220,35 +207,13 @@ class _UserProfilePage extends State<UserProfilePage> {
     final json = userAddUser.toJson();
     await docUser.set(json);
   }
-
-  //select picture function
-  Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
-    setState(() {
-      pickedFile = result.files.first;
-    });
-  }
-
-  //upload picture to FireStore
-  Future uploadFile() async {
-    //add firebase Auth id to rename profile picture
-    final path = 'picture/${userFirebase.uid}';
-    final file = File(pickedFile!.path!);
-
-    final ref = FirebaseStorage.instance.ref().child(path);
-    ref.putFile(file);
-
-    downloadURL = await ref.getDownloadURL();
-    print(downloadURL);
-  }
 }
 
 class UserAddUser {
   String id;
   String userPic;
   final String name;
-  final int tel;
+  final String tel;
   final String city;
 
   UserAddUser({
