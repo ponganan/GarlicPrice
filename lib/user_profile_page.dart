@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:garlic_price/upload_profile_picture.dart';
 import 'package:garlic_price/user_detail_page.dart';
 
@@ -84,6 +84,9 @@ class _UserProfilePage extends State<UserProfilePage> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: TextFormField(
                 controller: _controllerName,
+                //autofocus at this field for first time
+                autofocus: true,
+                textInputAction: TextInputAction.next,
                 decoration: decorationTF('ชื่อ'),
                 //autovalidateMode for automatic validate value
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -97,6 +100,14 @@ class _UserProfilePage extends State<UserProfilePage> {
               child: TextFormField(
                 controller: _controllerTel,
                 keyboardType: TextInputType.number,
+
+                //let user insert number only
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+
+                //set input only 10 digit
+                maxLength: 10,
+
+                textInputAction: TextInputAction.next,
                 decoration: decorationTF('เบอร์โทร'),
                 //autovalidateMode for automatic validate value
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -109,6 +120,7 @@ class _UserProfilePage extends State<UserProfilePage> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: TextFormField(
                 controller: _controllerCity,
+                textInputAction: TextInputAction.next,
                 decoration: decorationTF('จังหวัด'),
                 //autovalidateMode for automatic validate value
                 autovalidateMode: AutovalidateMode.onUserInteraction,

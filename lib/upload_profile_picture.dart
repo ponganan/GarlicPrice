@@ -29,7 +29,9 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
   }
 
   Future uploadFile() async {
-    final path = 'profilePicture/${pickedFile!.name}';
+    final postID = DateTime.now().millisecondsSinceEpoch.toString();
+    final path = 'profilePicture/${'post_$postID'}';
+    //final path = 'profilePicture/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -38,6 +40,10 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
     });
 
     final snapshot = await uploadTask!.whenComplete(() {});
+
+    setState(() {
+      uploadTask == null;
+    });
 
     //***************** if want to get value from async  when complete ************ //
     //******* we have to use then((value) => for get value when async complete ***** //
@@ -50,10 +56,6 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
         );
     //***************** if want to get value from async  when complete ************ //
     //******* we have to use then((value) => for get value when async complete ***** //
-
-    setState(() {
-      uploadTask == null;
-    });
   }
 
   @override
@@ -208,8 +210,10 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
 
   Future addProfilePicture(AddProfilePicture profilePicture) async {
     final docProfilePic = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userFirebase.uid)
         .collection('profilepic')
-        .doc(userFirebase.uid);
+        .doc();
     //add id from Firebase Auth id
     profilePicture.id = docProfilePic.id;
 

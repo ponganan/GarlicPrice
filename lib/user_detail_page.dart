@@ -32,6 +32,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
             return user == null
                 ? const Center(child: Text('No User'))
                 : buildUser(user);
+            // : UserProfilePicture();
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -102,6 +103,28 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 ),
               ],
             ),
+            const SizedBox(height: 15),
+            Row(
+              children: [
+                const Text(
+                  'จังหวัด : ',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                //have to used Expanded to use TextField
+                Expanded(
+                  child: TextFormField(
+                    initialValue: user.city,
+                    textInputAction: TextInputAction.next,
+                    decoration: decorationTF('จังหวัด'),
+                    //autovalidateMode for automatic validate value
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'กรุณากรอกจังหวัด'
+                        : null,
+                  ),
+                )
+              ],
+            ),
             const SizedBox(height: 25),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -121,6 +144,15 @@ class _UserDetailPageState extends State<UserDetailPage> {
             ),
           ],
         ),
+      );
+
+  InputDecoration decorationTF(String label) => InputDecoration(
+        labelText: label,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        //use OutlineInputBorder to Border all Textfield
+
+        border: const OutlineInputBorder(),
       );
 
   // List All Users Data
