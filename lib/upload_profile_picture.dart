@@ -209,16 +209,14 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
   }
 
   Future addProfilePicture(AddProfilePicture profilePicture) async {
-    final docProfilePic = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userFirebase.uid)
-        .collection('profilepic')
-        .doc();
-    //add id from Firebase Auth id
+    final docProfilePic =
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+
     profilePicture.id = docProfilePic.id;
+    //profilePicture.userpic = docProfilePic.id;
 
     final json = profilePicture.toJson();
-    await docProfilePic.set(json);
+    await docProfilePic.update(json);
   }
 }
 

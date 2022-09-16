@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:garlic_price/user_profile_page.dart';
+import 'package:garlic_price/home_page.dart';
+import 'package:garlic_price/user_detail_page.dart';
 import 'package:garlic_price/auth_page.dart';
+import 'package:garlic_price/user_profile_page.dart';
 
 class CheckUserLoginPage extends StatefulWidget {
   const CheckUserLoginPage({Key? key}) : super(key: key);
@@ -32,7 +34,7 @@ class _CheckUserLoginPageState extends State<CheckUserLoginPage> {
           //check user login or not
           // if have go to VerifyEmailPage()
           if (snapshot.hasData) {
-            return const UserProfilePage();
+            return const UserDetailPage();
           } else {
             return const AuthPage();
           }

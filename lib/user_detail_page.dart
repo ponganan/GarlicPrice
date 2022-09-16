@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garlic_price/user_profile_page.dart';
 
+import 'home_page.dart';
 import 'model/user_list.dart';
 
 class UserDetailPage extends StatefulWidget {
@@ -12,7 +14,7 @@ class UserDetailPage extends StatefulWidget {
 }
 
 class _UserDetailPageState extends State<UserDetailPage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final userFirebase = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,23 @@ class _UserDetailPageState extends State<UserDetailPage> {
         title: const Text(
           'ข้อมูลบัญชี',
         ),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return HomePage();
+                      },
+                    ),
+                  );
+                },
+                child: const Icon(Icons.logout),
+              )),
+        ],
       ),
       body: FutureBuilder<UserList?>(
         future: readUser(),
@@ -34,125 +53,156 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 : buildUser(user);
             // : UserProfilePicture();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return buildFirstTimeUserID();
           }
         },
       ),
     );
   }
 
-  Widget buildUser(UserList user) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 30),
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 85,
-                  backgroundColor: Colors.blue,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(user.userPic.toString()),
-                    radius: 80,
+  Widget buildFirstTimeUserID() => Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: MaterialButton(
+            onPressed: () {
+              //if formKey validate
+
+              final firstTimeUserID = FirstTimeUserID();
+
+              //upload picture
+              //uploadFile();
+
+              createFirstTimeUserID(firstTimeUserID);
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return const UserDetailPage();
+                  },
+                ),
+              );
+            },
+            color: Colors.green[200],
+            child: const Text(
+              'ตั้งค่าบัญชี',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      );
+  Widget buildUser(UserList user) => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 30),
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 85,
+                    backgroundColor: Colors.blue,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user.userPic.toString()),
+                      radius: 80,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 25),
+              Row(
+                children: [
+                  const Text(
+                    'ชื่อ : ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                )
-              ],
-            ),
-            const SizedBox(height: 25),
-            Row(
-              children: [
-                const Text(
-                  'ชื่อ : ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  user.name,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                const Text(
-                  'เบอร์โทร : ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  user.tel,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                const Text(
-                  'จังหวัด : ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  user.city,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                const Text(
-                  'จังหวัด : ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                //have to used Expanded to use TextField
-                Expanded(
-                  child: TextFormField(
-                    initialValue: user.city,
-                    textInputAction: TextInputAction.next,
-                    decoration: decorationTF('จังหวัด'),
-                    //autovalidateMode for automatic validate value
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'กรุณากรอกจังหวัด'
-                        : null,
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                )
-              ],
-            ),
-            const SizedBox(height: 25),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                color: Colors.green[200],
-                child: const Text(
-                  'OK',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                ],
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  const Text(
+                    'เบอร์โทร : ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    user.tel,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  const Text(
+                    'จังหวัด : ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    user.city,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const UserProfilePage();
+                        },
+                      ),
+                    );
+                  },
+                  color: Colors.green[200],
+                  child: const Text(
+                    'เพิ่มข้อมูล / แก้ไข',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const HomePage();
+                        },
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.home),
+                  label: Text(
+                    'กลับหน้าแรก',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      );
-
-  InputDecoration decorationTF(String label) => InputDecoration(
-        labelText: label,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        //use OutlineInputBorder to Border all Textfield
-
-        border: const OutlineInputBorder(),
       );
 
   // List All Users Data
@@ -162,11 +212,23 @@ class _UserDetailPageState extends State<UserDetailPage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
 
+  Future createFirstTimeUserID(FirstTimeUserID addFirstTimeUser) async {
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+    //add id from Firebase Auth id
+    addFirstTimeUser.id = docUser.id;
+
+    //userAddUser.id = userFirebase.uid;
+
+    final json = addFirstTimeUser.toJsonFirstTimeID();
+    await docUser.set(json);
+  }
+
   //List User Login data with Firebase Auth ID
   Future<UserList?> readUser() async {
     // get single document by ID
     final docUser =
-        FirebaseFirestore.instance.collection('users').doc(user.uid);
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
     final snapshot = await docUser.get();
 
     if (snapshot.exists) {
@@ -174,4 +236,27 @@ class _UserDetailPageState extends State<UserDetailPage> {
     }
     return null;
   }
+}
+
+class FirstTimeUserID {
+  String id;
+  String userPic;
+  String name;
+  String tel;
+  String city;
+
+  FirstTimeUserID({
+    this.id = '',
+    this.userPic = '',
+    this.name = '',
+    this.tel = '',
+    this.city = '',
+  });
+  Map<String, dynamic> toJsonFirstTimeID() => {
+        'id': id,
+        'userpic': userPic,
+        'name': name,
+        'tel': tel,
+        'city': city,
+      };
 }

@@ -7,6 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:garlic_price/upload_profile_picture.dart';
 import 'package:garlic_price/user_detail_page.dart';
 
+import 'home_page.dart';
+import 'model/user_list.dart';
+
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
@@ -19,11 +22,21 @@ class _UserProfilePage extends State<UserProfilePage> {
 
   PlatformFile? pickedFile;
   String? downloadURL;
+  //String? getUserPic;
 
   final formKey = GlobalKey<FormState>();
-  final _controllerName = TextEditingController();
-  final _controllerTel = TextEditingController();
-  final _controllerCity = TextEditingController();
+  late TextEditingController _controllerName = TextEditingController();
+  late TextEditingController _controllerTel = TextEditingController();
+  late TextEditingController _controllerCity = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _controllerName.dispose();
+    _controllerTel.dispose();
+    _controllerCity.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +45,69 @@ class _UserProfilePage extends State<UserProfilePage> {
         title: const Text(
           'รายละเอียดบัญชี',
         ),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                child: const Icon(Icons.logout),
-              )),
-        ],
       ),
-      body: Form(
+      body: FutureBuilder<UserList?>(
+        future: readUser(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went Wrong! ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            final user = snapshot.data;
+
+            _controllerName.text = user!.name!;
+            _controllerTel.text = user!.tel!;
+            _controllerCity.text = user!.city!;
+            // getUserPic = user!.userPic!;
+            // print('test =$getUserPic');
+
+            return user == null
+                ? const Center(
+                    child: Text('No User'),
+                  )
+                : buildUser(user);
+            // : UserProfilePicture();
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Future createUserAddUser(UserAddUser userAddUser) async {
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+    //add id from Firebase Auth id
+    userAddUser.id = docUser.id;
+    //userAddUser.userPic = getUserPic!;
+    //userAddUser.id = userFirebase.uid;
+
+    final json = userAddUser.toJson();
+    await docUser.set(json);
+  }
+
+  Stream<List<UserList>> readUsers() => FirebaseFirestore.instance
+      .collection('users')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
+
+//List User Login data with Firebase Auth ID
+  Future<UserList?> readUser() async {
+    // get single document by ID
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+    final snapshot = await docUser.get();
+
+    if (snapshot.exists) {
+      return UserList.fromJson(snapshot.data()!);
+    }
+    return null;
+  }
+
+  Widget buildUser(UserList user) => Form(
         key: formKey,
         child: ListView(
           padding: const EdgeInsets.all(15),
@@ -173,19 +237,19 @@ class _UserProfilePage extends State<UserProfilePage> {
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: MaterialButton(
+              child: ElevatedButton.icon(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (BuildContext context) {
-                        return const UserDetailPage();
+                        return HomePage();
                       },
                     ),
                   );
                 },
-                color: Colors.green[200],
-                child: const Text(
-                  'ดูข้อมูลบัญชี',
+                icon: Icon(Icons.home),
+                label: Text(
+                  'กลับหน้าแรก',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -195,31 +259,16 @@ class _UserProfilePage extends State<UserProfilePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  InputDecoration decorationTF(String label) => InputDecoration(
-        labelText: label,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        //use OutlineInputBorder to Border all Textfield
-
-        border: const OutlineInputBorder(),
       );
-
-  Future createUserAddUser(UserAddUser userAddUser) async {
-    final docUser =
-        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
-    //add id from Firebase Auth id
-    userAddUser.id = docUser.id;
-    userAddUser.userPic = 'downloadURL!';
-    //userAddUser.id = userFirebase.uid;
-
-    final json = userAddUser.toJson();
-    await docUser.set(json);
-  }
 }
+
+InputDecoration decorationTF(String label) => InputDecoration(
+      labelText: label,
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      //use OutlineInputBorder to Border all Textfield
+
+      border: const OutlineInputBorder(),
+    );
 
 class UserAddUser {
   String id;
