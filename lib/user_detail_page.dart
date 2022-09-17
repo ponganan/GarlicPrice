@@ -190,8 +190,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.home),
-                  label: Text(
+                  icon: const Icon(Icons.home),
+                  label: const Text(
                     'กลับหน้าแรก',
                     style: TextStyle(
                       fontSize: 18,
@@ -244,6 +244,7 @@ class FirstTimeUserID {
   String name;
   String tel;
   String city;
+  String imagePath;
 
   FirstTimeUserID({
     this.id = '',
@@ -251,6 +252,7 @@ class FirstTimeUserID {
     this.name = '',
     this.tel = '',
     this.city = '',
+    this.imagePath = '',
   });
   Map<String, dynamic> toJsonFirstTimeID() => {
         'id': id,
@@ -258,5 +260,6 @@ class FirstTimeUserID {
         'name': name,
         'tel': tel,
         'city': city,
+        'imagePath': imagePath,
       };
 }

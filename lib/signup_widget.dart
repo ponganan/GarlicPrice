@@ -79,6 +79,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         padding: const EdgeInsets.only(left: 20.0),
                         child: TextFormField(
                           controller: _emailController,
+                          textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (email) =>
                               email != null && !EmailValidator.validate(email)
@@ -111,6 +112,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           controller: _passwordController,
                           //obscureText for don't show password text
                           obscureText: true,
+                          textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) =>
                               value != null && value.length < 6
@@ -145,6 +147,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           controller: _cfPasswordController,
                           //obscureText for don't show password text
                           obscureText: true,
+                          textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           // confirm password with 2 condition
                           validator: (value) {

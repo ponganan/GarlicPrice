@@ -77,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
                         controller: _emailController,
+                        textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
                           icon: Icon(Icons.email_outlined),
                           border: InputBorder.none,
@@ -104,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         //obscureText for don't show password text
                         obscureText: true,
+                        textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
                           icon: Icon(Icons.key_outlined),
                           border: InputBorder.none,

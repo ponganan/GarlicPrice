@@ -22,7 +22,7 @@ class _UserProfilePage extends State<UserProfilePage> {
 
   PlatformFile? pickedFile;
   String? downloadURL;
-  //String? getUserPic;
+  String? getUserPic;
 
   final formKey = GlobalKey<FormState>();
   late TextEditingController _controllerName = TextEditingController();
@@ -57,8 +57,8 @@ class _UserProfilePage extends State<UserProfilePage> {
             _controllerName.text = user!.name!;
             _controllerTel.text = user!.tel!;
             _controllerCity.text = user!.city!;
-            // getUserPic = user!.userPic!;
-            // print('test =$getUserPic');
+            getUserPic = user!.userPic!;
+            //print('test =$getUserPic');
 
             return user == null
                 ? const Center(
@@ -81,18 +81,18 @@ class _UserProfilePage extends State<UserProfilePage> {
         FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
     //add id from Firebase Auth id
     userAddUser.id = docUser.id;
-    //userAddUser.userPic = getUserPic!;
+    userAddUser.userPic = getUserPic!;
     //userAddUser.id = userFirebase.uid;
 
     final json = userAddUser.toJson();
-    await docUser.set(json);
+    await docUser.update(json);
   }
 
-  Stream<List<UserList>> readUsers() => FirebaseFirestore.instance
-      .collection('users')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
+  // Stream<List<UserList>> readUsers() => FirebaseFirestore.instance
+  //     .collection('users')
+  //     .snapshots()
+  //     .map((snapshot) =>
+  //         snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
 
 //List User Login data with Firebase Auth ID
   Future<UserList?> readUser() async {
@@ -113,36 +113,7 @@ class _UserProfilePage extends State<UserProfilePage> {
           padding: const EdgeInsets.all(15),
           children: <Widget>[
             const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Center(
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return const UploadProfilePicture();
-                      },
-                    ),
-                  ),
-                  child: Stack(children: const [
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage("assets/images/profile.png"),
-                      radius: 60,
-                    ),
-                    Positioned(
-                      bottom: 3,
-                      right: 45,
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 25,
-                        color: Colors.teal,
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            ),
+            if (getUserPic != null) pictureHasSelect() else pictureNotSelect(),
             const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -234,6 +205,29 @@ class _UserProfilePage extends State<UserProfilePage> {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const UserDetailPage();
+                      },
+                    ),
+                  );
+                },
+                color: Colors.green[200],
+                child: const Text(
+                  'รายละเอียดบัญชี',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -258,6 +252,67 @@ class _UserProfilePage extends State<UserProfilePage> {
               ),
             ),
           ],
+        ),
+      );
+
+  Widget pictureNotSelect() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: Center(
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return const UploadProfilePicture();
+                },
+              ),
+            ),
+            child: Stack(children: const [
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage("assets/images/profile.png"),
+                radius: 60,
+              ),
+              Positioned(
+                bottom: 3,
+                right: 45,
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 25,
+                  color: Colors.teal,
+                ),
+              ),
+            ]),
+          ),
+        ),
+      );
+
+  Widget pictureHasSelect() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 30),
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return const UploadProfilePicture();
+              },
+            ),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 85,
+                    backgroundColor: Colors.blue,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(getUserPic!),
+                      radius: 80,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       );
 }

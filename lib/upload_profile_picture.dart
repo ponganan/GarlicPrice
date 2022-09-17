@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:garlic_price/user_profile_page.dart';
 
 class UploadProfilePicture extends StatefulWidget {
   const UploadProfilePicture({Key? key}) : super(key: key);
@@ -17,7 +18,9 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
-  String? urlDownload;
+
+  String? imagePath;
+  String? oldImagePath = 'profilePicture/post_1663389906314';
 
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
@@ -35,11 +38,20 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
+
     setState(() {
       uploadTask = ref.putFile(file);
     });
 
     final snapshot = await uploadTask!.whenComplete(() {});
+    final imagePath2 = ref.fullPath;
+    debugPrint('imagepath2 = ' + imagePath2);
+    imagePath = imagePath2;
+
+    //delete old profile picture after upload new picture
+    debugPrint('old image path = ' + oldImagePath!);
+    final oldPic = FirebaseStorage.instance.ref().child(oldImagePath!);
+    await oldPic.delete();
 
     setState(() {
       uploadTask == null;
@@ -50,7 +62,7 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
     return snapshot.ref.getDownloadURL().then(
           (value) => {
             debugPrint(value),
-            urlDownload = value,
+            //urlDownload = value,
             getProfileURL(value),
           },
         );
@@ -181,7 +193,13 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const UserProfilePage();
+                      },
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.arrow_back_ios_new),
                 label: const Text(
@@ -204,6 +222,7 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
   void getProfileURL(String gotProfileURL) {
     final addPic = AddProfilePicture(
       userProfilePicture: gotProfileURL,
+      imagePath: imagePath!,
     );
     addProfilePicture(addPic);
   }
@@ -223,14 +242,17 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
 class AddProfilePicture {
   String id;
   final String userProfilePicture;
+  final String imagePath;
 
   AddProfilePicture({
     this.id = '',
     required this.userProfilePicture,
+    required this.imagePath,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'userpic': userProfilePicture,
+        'imagePath': imagePath,
       };
 }

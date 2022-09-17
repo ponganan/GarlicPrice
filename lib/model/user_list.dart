@@ -4,6 +4,7 @@ class UserList {
   final String name;
   final String tel;
   final String city;
+  final String imagePath;
 
   UserList({
     this.id = '',
@@ -11,6 +12,7 @@ class UserList {
     required this.name,
     required this.tel,
     required this.city,
+    required this.imagePath,
   });
 
   Map<String, dynamic> toJson() => {
@@ -19,6 +21,7 @@ class UserList {
         'name': name,
         'tel': tel,
         'city': city,
+        'imagePath': imagePath,
       };
 
   static UserList fromJson(Map<String, dynamic> json) => UserList(
@@ -27,5 +30,6 @@ class UserList {
         name: json['name'],
         tel: json['tel'],
         city: json['city'],
+        imagePath: json['imagePath'],
       );
 }
