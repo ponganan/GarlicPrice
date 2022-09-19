@@ -296,20 +296,33 @@ class _UserProfilePage extends State<UserProfilePage> {
               },
             ),
           ),
-          child: Column(
+          child: Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
                 children: [
-                  CircleAvatar(
-                    radius: 85,
-                    backgroundColor: Colors.blue,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(getUserPic!),
-                      radius: 80,
-                    ),
-                  )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 85,
+                        backgroundColor: Colors.blue,
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(getUserPic!),
+                          radius: 80,
+                        ),
+                      )
+                    ],
+                  ),
                 ],
+              ),
+              const Positioned(
+                bottom: 0,
+                right: 73,
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 35,
+                  color: Colors.teal,
+                ),
               ),
             ],
           ),

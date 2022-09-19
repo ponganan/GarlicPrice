@@ -50,8 +50,8 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
 
     //delete old profile picture after upload new picture
     debugPrint('old image path = ' + oldImagePath!);
-    final oldPic = FirebaseStorage.instance.ref().child(oldImagePath!);
-    await oldPic.delete();
+    // final oldPic = FirebaseStorage.instance.ref().child(oldImagePath!);
+    // await oldPic.delete();
 
     setState(() {
       uploadTask == null;
@@ -76,16 +76,21 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
       appBar: AppBar(
         title: const Text('เพิ่มรูปบัญชี'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          children: [
-            if (pickedFile != null) selectedPicture() else unSelectedPicture(),
-            const SizedBox(
-              height: 20,
-            ),
-            buildProgress(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Column(
+            children: [
+              if (pickedFile != null)
+                selectedPicture()
+              else
+                unSelectedPicture(),
+              const SizedBox(
+                height: 20,
+              ),
+              buildProgress(),
+            ],
+          ),
         ),
       ),
     );

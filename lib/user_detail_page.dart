@@ -41,21 +41,23 @@ class _UserDetailPageState extends State<UserDetailPage> {
               )),
         ],
       ),
-      body: FutureBuilder<UserList?>(
-        future: readUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went Wrong! ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            final user = snapshot.data;
-            return user == null
-                ? const Center(child: Text('No User'))
-                : buildUser(user);
-            // : UserProfilePicture();
-          } else {
-            return buildFirstTimeUserID();
-          }
-        },
+      body: SingleChildScrollView(
+        child: FutureBuilder<UserList?>(
+          future: readUser(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went Wrong! ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              final user = snapshot.data;
+              return user == null
+                  ? const Center(child: Text('No User'))
+                  : buildUser(user);
+              // : UserProfilePicture();
+            } else {
+              return buildFirstTimeUserID();
+            }
+          },
+        ),
       ),
     );
   }
@@ -93,6 +95,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
         ),
       );
+
   Widget buildUser(UserList user) => SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 30),
@@ -206,11 +209,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
       );
 
   // List All Users Data
-  Stream<List<UserList>> readUsers() => FirebaseFirestore.instance
-      .collection('users')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
+  // Stream<List<UserList>> readUsers() => FirebaseFirestore.instance
+  //     .collection('users')
+  //     .snapshots()
+  //     .map((snapshot) =>
+  //         snapshot.docs.map((doc) => UserList.fromJson(doc.data())).toList());
 
   Future createFirstTimeUserID(FirstTimeUserID addFirstTimeUser) async {
     final docUser =
