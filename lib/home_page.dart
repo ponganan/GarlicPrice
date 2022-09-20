@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garlic_price/check_user_login_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
 import 'package:garlic_price/list_price.dart';
+import 'package:garlic_price/price_chart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,12 +13,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int index = 0;
-  final screen = const [
+  final screen = [
     ListPrice(),
+    PriceChart(),
     ListAllPostPage(),
-    Center(
-      child: Text('Chat'),
-    ),
     CheckUserLoginPage(),
   ];
   @override
@@ -52,14 +51,16 @@ class _HomePageState extends State<HomePage> {
               label: 'หน้าแรก',
             ),
             NavigationDestination(
+              icon: Icon(Icons.auto_graph_outlined),
+              selectedIcon: Icon(
+                Icons.auto_graph,
+              ),
+              label: 'กราฟ',
+            ),
+            NavigationDestination(
               icon: Icon(Icons.shopping_bag_outlined),
               selectedIcon: Icon(Icons.shopping_bag),
               label: 'ประกาศ',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.chat_outlined),
-              selectedIcon: Icon(Icons.chat),
-              label: 'แชท',
             ),
             NavigationDestination(
               icon: Icon(Icons.account_circle_outlined),

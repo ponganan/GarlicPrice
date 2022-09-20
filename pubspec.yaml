@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.17.0
   file_picker: ^5.0.1
   firebase_storage: ^10.3.8
+  fl_chart: ^0.55.1
 
 dev_dependencies:
   flutter_test:
