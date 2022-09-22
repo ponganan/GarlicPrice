@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:garlic_price/imagepicker_upload.dart';
 import 'package:garlic_price/upload_profile_picture.dart';
 import 'package:garlic_price/user_detail_page.dart';
 
@@ -262,7 +263,8 @@ class _UserProfilePage extends State<UserProfilePage> {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return const UploadProfilePicture();
+                  // return const UploadProfilePicture();
+                  return const ImagePickerUpload();
                 },
               ),
             ),
@@ -292,7 +294,8 @@ class _UserProfilePage extends State<UserProfilePage> {
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return const UploadProfilePicture();
+                //return const UploadProfilePicture();
+                return const ImagePickerUpload();
               },
             ),
           ),

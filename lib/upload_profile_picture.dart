@@ -32,9 +32,9 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
   }
 
   Future uploadFile() async {
-    final postID = DateTime.now().millisecondsSinceEpoch.toString();
-    final path = 'profilePicture/${'post_$postID'}';
-    //final path = 'profilePicture/${pickedFile!.name}';
+    //  final postID = DateTime.now().millisecondsSinceEpoch.toString();
+    // final path = 'profilePicture/${'post_$postID'}';
+    final path = 'profilePicture/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);

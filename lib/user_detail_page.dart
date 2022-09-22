@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:garlic_price/user_profile_page.dart';
 
 import 'home_page.dart';
+import 'image_dialog.dart';
 import 'model/user_list.dart';
 
 class UserDetailPage extends StatefulWidget {
@@ -105,12 +106,18 @@ class _UserDetailPageState extends State<UserDetailPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 85,
-                    backgroundColor: Colors.blue,
+                  GestureDetector(
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (_) => ImageDialog(user.userPic.toString()),
+                    ),
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(user.userPic.toString()),
-                      radius: 80,
+                      radius: 85,
+                      backgroundColor: Colors.blue,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(user.userPic.toString()),
+                        radius: 80,
+                      ),
                     ),
                   )
                 ],

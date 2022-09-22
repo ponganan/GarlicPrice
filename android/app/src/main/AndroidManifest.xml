@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ponganan.garlicprice.garlic_price">
    <application
-        android:label="garlic_price"
+        android:label="ราคากระเทียมจีน"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
