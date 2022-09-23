@@ -24,7 +24,7 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
 
   UploadTask? uploadTask;
 
-  String? fireBaseimagePath;
+  String? fireBaseImagePath;
   String? imageName;
   String? oldImagePath = 'profilePicture/post_1663389906314';
 
@@ -72,7 +72,7 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
     final snapshot = await uploadTask!.whenComplete(() {});
     final imagePath2 = ref.fullPath;
     debugPrint('imagepath2 = ' + imagePath2);
-    fireBaseimagePath = imagePath2;
+    fireBaseImagePath = imagePath2;
 
     //delete old profile picture after upload new picture
     // debugPrint('old image path = ' + oldImagePath!);
@@ -99,7 +99,7 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
   void getProfileURL(String gotProfileURL) {
     final addPic = AddProfilePicture(
       userProfilePicture: gotProfileURL,
-      imagePath: fireBaseimagePath!,
+      imagePath: fireBaseImagePath!,
     );
     addProfilePicture(addPic);
   }

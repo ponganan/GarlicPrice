@@ -9,8 +9,6 @@ class ImageDialog extends StatelessWidget {
     return Dialog(
       child: Image.network(
         link!,
-        width: 800,
-        height: 600,
         fit: BoxFit.cover,
       ),
     );

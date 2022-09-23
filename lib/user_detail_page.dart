@@ -55,7 +55,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   : buildUser(user);
               // : UserProfilePicture();
             } else {
-              return buildFirstTimeUserID();
+              return userFirebase != null
+                  ? buildFirstTimeUserID()
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    );
             }
           },
         ),
@@ -65,7 +69,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
 
   Widget buildFirstTimeUserID() => Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 25.0, vertical: 200.0),
           child: MaterialButton(
             onPressed: () {
               //if formKey validate
@@ -106,20 +111,32 @@ class _UserDetailPageState extends State<UserDetailPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (_) => ImageDialog(user.userPic.toString()),
-                    ),
-                    child: CircleAvatar(
-                      radius: 85,
-                      backgroundColor: Colors.blue,
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(user.userPic.toString()),
-                        radius: 80,
-                      ),
-                    ),
-                  )
+                  user.userPic.toString() != ""
+                      ? GestureDetector(
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (_) =>
+                                ImageDialog(user.userPic.toString()),
+                          ),
+                          child: CircleAvatar(
+                            radius: 85,
+                            backgroundColor: Colors.blue,
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(user.userPic.toString()),
+                              radius: 80,
+                            ),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 85,
+                          backgroundColor: Colors.blue,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(user.userPic.toString()),
+                            radius: 80,
+                          ),
+                        )
                 ],
               ),
               const SizedBox(height: 25),

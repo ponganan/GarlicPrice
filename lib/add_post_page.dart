@@ -4,8 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:garlic_price/home_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({Key? key}) : super(key: key);
@@ -17,9 +19,13 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPage extends State<AddPostPage> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
 
-  PlatformFile? pickedFile;
-  String? picPostURL;
+  File? image;
+
   UploadTask? uploadTask;
+
+  String? fireBaseImagePath;
+  String? imageName;
+  String? picPostURL;
 
   final formKey = GlobalKey<FormState>();
   final _controllerTopic = TextEditingController();
@@ -48,28 +54,19 @@ class _AddPostPage extends State<AddPostPage> {
           padding: const EdgeInsets.all(15),
           children: <Widget>[
             const SizedBox(height: 28),
-            if (pickedFile != null)
+            if (image != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
                   onTap: () {
-                    selectFile();
+                    pickImage(ImageSource.gallery);
                   },
                   child: Image.file(
-                    File(pickedFile!.path!),
+                    File(image!.path!),
                     width: double.infinity,
                   ),
                 ),
               ),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: IconButton(
-                icon: const Icon(Icons.camera_alt_outlined),
-                iconSize: 35,
-                onPressed: selectFile,
-              ),
-            ),
             const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -80,6 +77,18 @@ class _AddPostPage extends State<AddPostPage> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'กรุณาระบุข้อความ' : null,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: IconButton(
+                alignment: Alignment.bottomRight,
+                icon: const Icon(Icons.image_outlined),
+                iconSize: 35,
+                onPressed: () {
+                  pickImage(ImageSource.gallery);
+                },
               ),
             ),
             const SizedBox(height: 15),
@@ -124,6 +133,83 @@ class _AddPostPage extends State<AddPostPage> {
     );
   }
 
+  Widget unSelectedPicture() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 25.0),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 80,
+              width: double.infinity,
+              child: IconButton(
+                onPressed: () {
+                  pickImage(
+                    ImageSource.gallery,
+                  );
+                },
+                icon: const Icon(
+                  Icons.image_outlined,
+                  size: 60,
+                ),
+              ),
+            ),
+            const Text(
+              'เลือกรูปภาพ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.blueAccent,
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            SizedBox(
+              height: 80,
+              width: double.infinity,
+              child: IconButton(
+                onPressed: () {
+                  pickImage(ImageSource.camera);
+                },
+                icon: const Icon(
+                  Icons.camera_enhance_outlined,
+                  size: 60,
+                ),
+              ),
+            ),
+            const Text(
+              'เลือกรูปถ่าย',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.blueAccent,
+              ),
+            ),
+          ],
+        ),
+      );
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 600,
+      );
+      if (image == null) return;
+
+      final imageTemp = File(image.path);
+      //save image cache
+      //final imagePermanent = await saveImagePermanently(image.path);
+      setState(() {
+        this.image = imageTemp;
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
   InputDecoration decorationTF(String label) => InputDecoration(
         labelText: label,
         contentPadding:
@@ -145,27 +231,56 @@ class _AddPostPage extends State<AddPostPage> {
   }
 
   //select picture function
-  Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
-    setState(() {
-      pickedFile = result.files.first;
-    });
-  }
+
+  // Future addPostTopic(AddPostTopic postTopic) async {
+  //   final docPostTopic =
+  //       FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+  //
+  //   postTopic.id = docPostTopic.id;
+  //   //profilePicture.userpic = docProfilePic.id;
+  //
+  //   final json = postTopic.toJson();
+  //   await docPostTopic.update(json);
+  // }
 
   //upload picture to FireStore
   Future uploadFile() async {
-    //add firebase Auth id to rename profile picture
-    final path = 'postpicture/${pickedFile!.name}';
-    final file = File(pickedFile!.path!);
+    final postID = DateTime.now().millisecondsSinceEpoch.toString();
+    final path = 'postPicture/${'post_$postID'}';
+    //final path = 'profilePicture/${imageName}';
+    final file = File(image!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
-    uploadTask = ref.putFile(file);
+
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
 
     final snapshot = await uploadTask!.whenComplete(() {});
+    final imagePath2 = ref.fullPath;
+    debugPrint('imagepath2 = ' + imagePath2);
+    fireBaseImagePath = imagePath2;
 
-    final picPostURL = await snapshot.ref.getDownloadURL();
-    print('download link: $picPostURL');
+    //delete old profile picture after upload new picture
+    // debugPrint('old image path = ' + oldImagePath!);
+    // final oldPic = FirebaseStorage.instance.ref().child(oldImagePath!);
+    // await oldPic.delete();
+
+    setState(() {
+      uploadTask == null;
+    });
+
+    //***************** if want to get value from async  when complete ************ //
+    //******* we have to use then((value) => for get value when async complete ***** //
+    return snapshot.ref.getDownloadURL().then(
+          (value) => {
+            debugPrint(value),
+            picPostURL = value,
+            //getProfileURL(value),
+          },
+        );
+    //***************** if want to get value from async  when complete ************ //
+    //******* we have to use then((value) => for get value when async complete ***** //
   }
 }
 
