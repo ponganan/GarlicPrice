@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:garlic_price/add_post_page.dart';
+import 'package:garlic_price/auth_post_page.dart';
 
 import 'model/topic_list.dart';
 
@@ -36,7 +36,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: TextButton.icon(
@@ -59,7 +59,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) {
-                      return const AddPostPage();
+                      return AuthPostPage();
                     },
                   ),
                 );
@@ -90,14 +90,56 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
     );
   }
 
-  Widget buildTopic(TopicList topic) => ListTile(
-        leading: CircleAvatar(child: Text('xx')),
-        title: Text(topic.topicPic),
-        subtitle: Text(topic.topic),
+  Widget buildTopic(TopicList topic) => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  const Text(
+                    'หัวข้อ : ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    topic.topic,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      topic.topicDetail,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Container(
+                // height: double.infinity,
+                alignment: Alignment.center, // This is needed
+                child: Image.network(
+                  topic.topicPic,
+                  fit: BoxFit.contain,
+                  width: 350,
+                ),
+              ),
+              const SizedBox(height: 15),
+            ],
+          ),
+        ),
       );
 
   Stream<List<TopicList>> readTopic() => FirebaseFirestore.instance
       .collection('postsell')
+      .orderBy('datePost', descending: true)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => TopicList.fromJson(doc.data())).toList());

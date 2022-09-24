@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:garlic_price/user_detail_page.dart';
+import 'package:garlic_price/add_post_page.dart';
 import 'package:garlic_price/auth_page.dart';
 
-class CheckUserLoginPage extends StatefulWidget {
-  const CheckUserLoginPage({Key? key}) : super(key: key);
+class AuthPostPage extends StatefulWidget {
+  const AuthPostPage({Key? key}) : super(key: key);
 
   @override
-  State<CheckUserLoginPage> createState() => _CheckUserLoginPageState();
+  State<AuthPostPage> createState() => _AuthPostPageState();
 }
 
-class _CheckUserLoginPageState extends State<CheckUserLoginPage> {
+class _AuthPostPageState extends State<AuthPostPage> {
   //final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -32,7 +32,7 @@ class _CheckUserLoginPageState extends State<CheckUserLoginPage> {
           //check user login or not
           // if have go to VerifyEmailPage()
           if (snapshot.hasData) {
-            return const UserDetailPage();
+            return const AddPostPage();
           } else {
             return const AuthPage();
           }

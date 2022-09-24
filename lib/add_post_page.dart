@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:garlic_price/home_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -29,6 +27,7 @@ class _AddPostPage extends State<AddPostPage> {
 
   final formKey = GlobalKey<FormState>();
   final _controllerTopic = TextEditingController();
+  final _controllerTopicDetail = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -72,24 +71,55 @@ class _AddPostPage extends State<AddPostPage> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: TextFormField(
                 controller: _controllerTopic,
+                decoration: decorationTF('หัวข้อประกาศ'),
+
+                //autovalidateMode for automatic validate value
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'กรุณาระบุหัวข้อประกาศ'
+                    : null,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: TextFormField(
+                controller: _controllerTopicDetail,
                 decoration: decorationTF('ข้อความที่ต้องการประกาศ'),
+                maxLines: 5,
                 //autovalidateMode for automatic validate value
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
-                    value == null || value.isEmpty ? 'กรุณาระบุข้อความ' : null,
+                    value == null || value.isEmpty ? 'กรุณาระบุประกาศ' : null,
               ),
             ),
             const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: IconButton(
-                alignment: Alignment.bottomRight,
-                icon: const Icon(Icons.image_outlined),
-                iconSize: 35,
-                onPressed: () {
-                  pickImage(ImageSource.gallery);
-                },
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: IconButton(
+                    alignment: Alignment.bottomRight,
+                    icon: const Icon(Icons.image_outlined),
+                    iconSize: 35,
+                    onPressed: () {
+                      pickImage(ImageSource.gallery);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: IconButton(
+                    alignment: Alignment.bottomRight,
+                    icon: const Icon(Icons.camera_enhance_outlined),
+                    iconSize: 35,
+                    onPressed: () {
+                      pickImage(ImageSource.camera);
+                    },
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 15),
             Padding(
@@ -98,20 +128,16 @@ class _AddPostPage extends State<AddPostPage> {
                 onPressed: () {
                   //if formKey validate
                   if (formKey.currentState!.validate()) {
-                    final userAddTopic = AddTopic(
-                      //get value from name TextField
-                      topic: _controllerTopic.text,
-                    );
-
-                    //upload picture
-                    uploadFile();
-
-                    createAddTopic(userAddTopic);
-
+                    if (image == null) {
+                      picPostURL = '';
+                      getPostDetail(picPostURL!);
+                    } else {
+                      uploadFile();
+                    }
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return const HomePage();
+                          return const ListAllPostPage();
                         },
                       ),
                     );
@@ -210,39 +236,6 @@ class _AddPostPage extends State<AddPostPage> {
     }
   }
 
-  InputDecoration decorationTF(String label) => InputDecoration(
-        labelText: label,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        //use OutlineInputBorder to Border all Textfield
-
-        border: const OutlineInputBorder(),
-      );
-
-  Future createAddTopic(AddTopic userAddTopic) async {
-    final docTopic = FirebaseFirestore.instance.collection('postsell').doc();
-    //add id from Firebase Auth id
-    userAddTopic.id = docTopic.id;
-    userAddTopic.topicPic = picPostURL!;
-    //userAddUser.id = userFirebase.uid;
-
-    final json = userAddTopic.toJson();
-    await docTopic.set(json);
-  }
-
-  //select picture function
-
-  // Future addPostTopic(AddPostTopic postTopic) async {
-  //   final docPostTopic =
-  //       FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
-  //
-  //   postTopic.id = docPostTopic.id;
-  //   //profilePicture.userpic = docProfilePic.id;
-  //
-  //   final json = postTopic.toJson();
-  //   await docPostTopic.update(json);
-  // }
-
   //upload picture to FireStore
   Future uploadFile() async {
     final postID = DateTime.now().millisecondsSinceEpoch.toString();
@@ -276,28 +269,84 @@ class _AddPostPage extends State<AddPostPage> {
           (value) => {
             debugPrint(value),
             picPostURL = value,
-            //getProfileURL(value),
+            getPostDetail(value),
           },
         );
     //***************** if want to get value from async  when complete ************ //
     //******* we have to use then((value) => for get value when async complete ***** //
   }
+
+  void getPostDetail(String gotPostURL) {
+    final addPostTopic = AddTopic(
+      topicPic: picPostURL!,
+      uID: userFirebase.uid,
+      topic: _controllerTopic.text,
+      topicDetail: _controllerTopicDetail.text,
+      datePost: DateTime.now(),
+    );
+    createAddTopic(addPostTopic);
+  }
+
+  InputDecoration decorationTF(String label) => InputDecoration(
+        labelText: label,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        //use OutlineInputBorder to Border all Textfield
+
+        border: const OutlineInputBorder(),
+      );
+
+  Future createAddTopic(AddTopic userAddTopic) async {
+    final docTopic = FirebaseFirestore.instance.collection('postsell').doc();
+    //add id from Firebase Auth id
+    userAddTopic.id = docTopic.id;
+    //userAddTopic.uID = userFirebase.uid;
+    //userAddTopic.topicPic = picPostURL!;
+
+    final json = userAddTopic.toJson();
+    await docTopic.set(json);
+  }
+
+  //select picture function
+
+  // Future addPostTopic(AddPostTopic postTopic) async {
+  //   final docPostTopic =
+  //       FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+  //
+  //   postTopic.id = docPostTopic.id;
+  //   //profilePicture.userpic = docProfilePic.id;
+  //
+  //   final json = postTopic.toJson();
+  //   await docPostTopic.update(json);
+  // }
+
 }
 
 class AddTopic {
   String id;
+  String uID;
   String topicPic;
+
   final String topic;
+  final String topicDetail;
+
+  final DateTime datePost;
 
   AddTopic({
     this.id = '',
+    required this.uID,
     this.topicPic = '',
     required this.topic,
+    required this.topicDetail,
+    required this.datePost,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'topicpic': topicPic,
+        'uID': uID,
+        'topicPic': topicPic,
         'topic': topic,
+        'topicDetail': topicDetail,
+        'datePost': datePost,
       };
 }
