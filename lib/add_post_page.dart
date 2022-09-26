@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:garlic_price/edit_post_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -28,6 +29,14 @@ class _AddPostPage extends State<AddPostPage> {
   final formKey = GlobalKey<FormState>();
   final _controllerTopic = TextEditingController();
   final _controllerTopicDetail = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _controllerTopic.dispose();
+    _controllerTopicDetail.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +155,31 @@ class _AddPostPage extends State<AddPostPage> {
                 color: Colors.green[200],
                 child: const Text(
                   'Save',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 55),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: MaterialButton(
+                onPressed: () {
+                  //if formKey validate
+
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const EditPostPage();
+                      },
+                    ),
+                  );
+                },
+                color: Colors.blueAccent[200],
+                child: const Text(
+                  'แก้ไขประกาศของคุณ',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

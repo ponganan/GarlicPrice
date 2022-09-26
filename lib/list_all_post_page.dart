@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garlic_price/auth_post_page.dart';
 
+import 'model/format_datetime.dart';
 import 'model/topic_list.dart';
 
 class ListAllPostPage extends StatefulWidget {
@@ -13,6 +15,7 @@ class ListAllPostPage extends StatefulWidget {
 
 class _ListAllPostPageState extends State<ListAllPostPage> {
   //final userAccount = FirebaseAuth.instance.currentUser!;
+  final FormatDatetime convertDatetime = FormatDatetime();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +51,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
                 color: Colors.black,
               ),
               label: const Text(
-                'เพิ่มประกาศ',
+                'เพิ่ม / แก้ไข ประกาศ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -66,7 +69,7 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
               },
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Flexible(
             child: StreamBuilder<List<TopicList>>(
               stream: readTopic(),
@@ -102,10 +105,12 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
                     'หัวข้อ : ',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    topic.topic,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      topic.topic,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               ),
@@ -122,16 +127,33 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
                 ],
               ),
               const SizedBox(height: 15),
-              Container(
-                // height: double.infinity,
-                alignment: Alignment.center, // This is needed
-                child: Image.network(
-                  topic.topicPic,
-                  fit: BoxFit.contain,
-                  width: 350,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      convertDatetime.formattedDateAndTime(
+                          topic.datePost.millisecondsSinceEpoch),
+                      // topic.datePost.toIso8601String(),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 15),
+              topic.topicPic.toString() != ""
+                  ? Container(
+                      // height: double.infinity,
+                      alignment: Alignment.center, // This is needed
+                      child: Image.network(
+                        topic.topicPic,
+                        fit: BoxFit.contain,
+                        width: 350,
+                      ),
+                    )
+                  : Container(),
+              const SizedBox(height: 15),
+              Divider(),
             ],
           ),
         ),

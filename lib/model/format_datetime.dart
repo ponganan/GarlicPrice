@@ -6,4 +6,10 @@ class FormatDatetime {
     //return DateFormat('dd-MM-yyyy hh:mm a').format(dateFromTimeStamp);
     return DateFormat('dd-MM-yyyy').format(dateFromTimeStamp);
   }
+
+  String formattedDateAndTime(timeStamp) {
+    var dateFromTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+    return DateFormat('dd-MM-yyyy hh:mm a').format(dateFromTimeStamp);
+    //return DateFormat('dd-MM-yyyy').format(dateFromTimeStamp);
+  }
 }
