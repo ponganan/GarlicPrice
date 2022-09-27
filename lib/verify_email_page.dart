@@ -79,7 +79,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Email ยืนยันตัวตน ได้ส่งไปหาคุณแล้ว \n กรุณาตรวจสอบที่ inbox หรือ spam',
+                  'Email ยืนยันตัวตน ได้ส่งไปหาคุณแล้ว \n กรุณาตรวจสอบที่ inbox หรือ spam/junk',
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),

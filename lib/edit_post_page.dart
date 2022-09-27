@@ -27,13 +27,7 @@ class _EditPostPage extends State<EditPostPage> {
   final _controllerTopic = TextEditingController();
   final _controllerTopicDetail = TextEditingController();
 
-  File? image;
-
-  UploadTask? uploadTask;
-
-  String? fireBaseImagePath;
-  String? imageName;
-  String? picPostURL;
+  String? topicID;
 
   @override
   Widget build(BuildContext context) {
@@ -53,31 +47,28 @@ class _EditPostPage extends State<EditPostPage> {
               )),
         ],
       ),
-      body: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Flexible(
-              child: StreamBuilder<List<TopicList>>(
-                stream: readTopic(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went Wrong!!! ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    final topic = snapshot.data!;
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          Flexible(
+            child: StreamBuilder<List<TopicList>>(
+              stream: readTopic(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went Wrong!!! ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final topic = snapshot.data!;
 
-                    return ListView(
-                      children: topic.map(buildTopic).toList(),
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
+                  return ListView(
+                    children: topic.map(buildTopic).toList(),
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -107,115 +98,87 @@ class _EditPostPage extends State<EditPostPage> {
                       Icons.edit,
                     ),
                     color: Colors.grey,
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (BuildContext context) => Dialog(
-                        child: ListView(
-                          children: <Widget>[
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25.0),
-                              child: TextFormField(
-                                controller: _controllerTopic,
-                                decoration: decorationTF('หัวข้อประกาศ'),
-
-                                //autovalidateMode for automatic validate value
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'กรุณาระบุหัวข้อประกาศ'
-                                        : null,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25.0),
-                              child: TextFormField(
-                                controller: _controllerTopicDetail,
-                                decoration:
-                                    decorationTF('ข้อความที่ต้องการประกาศ'),
-                                maxLines: 5,
-                                //autovalidateMode for automatic validate value
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'กรุณาระบุประกาศ'
-                                        : null,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                    onPressed: () {
+                      _controllerTopic.text = topic.topic;
+                      _controllerTopicDetail.text = topic.topicDetail;
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => Form(
+                          key: formKey,
+                          child: Dialog(
+                            child: ListView(
+                              children: <Widget>[
+                                const SizedBox(height: 28),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 25.0),
-                                  child: IconButton(
-                                    alignment: Alignment.bottomRight,
-                                    icon: const Icon(Icons.image_outlined),
-                                    iconSize: 35,
-                                    onPressed: () {
-                                      pickImage(ImageSource.gallery);
-                                    },
+                                  child: TextFormField(
+                                    controller: _controllerTopic,
+                                    decoration: decorationTF('หัวข้อประกาศ'),
+
+                                    //autovalidateMode for automatic validate value
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) =>
+                                        value == null || value.isEmpty
+                                            ? 'กรุณาระบุหัวข้อประกาศ'
+                                            : null,
                                   ),
                                 ),
+                                const SizedBox(height: 15),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 25.0),
-                                  child: IconButton(
-                                    alignment: Alignment.bottomRight,
-                                    icon: const Icon(
-                                        Icons.camera_enhance_outlined),
-                                    iconSize: 35,
+                                  child: TextFormField(
+                                    controller: _controllerTopicDetail,
+                                    decoration:
+                                        decorationTF('ข้อความที่ต้องการประกาศ'),
+                                    maxLines: 5,
+                                    //autovalidateMode for automatic validate value
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) =>
+                                        value == null || value.isEmpty
+                                            ? 'กรุณาระบุประกาศ'
+                                            : null,
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0),
+                                  child: MaterialButton(
                                     onPressed: () {
-                                      pickImage(ImageSource.camera);
+                                      //if formKey validate
+                                      if (formKey.currentState!.validate()) {
+                                        topicID = topic.id;
+                                        getUpdatePostDetail();
+
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                              return const ListAllPostPage();
+                                            },
+                                          ),
+                                        );
+                                      }
                                     },
+                                    color: Colors.green[200],
+                                    child: const Text(
+                                      'Save',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25.0),
-                              child: MaterialButton(
-                                onPressed: () {
-                                  //if formKey validate
-                                  if (formKey.currentState!.validate()) {
-                                    if (image == null) {
-                                      picPostURL = '';
-                                      getPostDetail(picPostURL!);
-                                    } else {
-                                      uploadFile();
-                                    }
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                          return const ListAllPostPage();
-                                        },
-                                      ),
-                                    );
-                                  }
-                                },
-                                color: Colors.green[200],
-                                child: const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -303,85 +266,25 @@ class _EditPostPage extends State<EditPostPage> {
         border: const OutlineInputBorder(),
       );
 
-  Future pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(
-        source: source,
-        maxWidth: 800,
-        maxHeight: 600,
-      );
-      if (image == null) return;
-
-      final imageTemp = File(image.path);
-      //save image cache
-      //final imagePermanent = await saveImagePermanently(image.path);
-      setState(() {
-        this.image = imageTemp;
-      });
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  Future uploadFile() async {
-    final postID = DateTime.now().millisecondsSinceEpoch.toString();
-    final path = 'postPicture/${'post_$postID'}';
-    //final path = 'profilePicture/${imageName}';
-    final file = File(image!.path!);
-
-    final ref = FirebaseStorage.instance.ref().child(path);
-
-    setState(() {
-      uploadTask = ref.putFile(file);
-    });
-
-    final snapshot = await uploadTask!.whenComplete(() {});
-    final imagePath2 = ref.fullPath;
-    debugPrint('imagepath2 = ' + imagePath2);
-    fireBaseImagePath = imagePath2;
-
-    //delete old profile picture after upload new picture
-    // debugPrint('old image path = ' + oldImagePath!);
-    // final oldPic = FirebaseStorage.instance.ref().child(oldImagePath!);
-    // await oldPic.delete();
-
-    setState(() {
-      uploadTask == null;
-    });
-
-    //***************** if want to get value from async  when complete ************ //
-    //******* we have to use then((value) => for get value when async complete ***** //
-    return snapshot.ref.getDownloadURL().then(
-          (value) => {
-            debugPrint(value),
-            picPostURL = value,
-            getPostDetail(value),
-          },
-        );
-    //***************** if want to get value from async  when complete ************ //
-    //******* we have to use then((value) => for get value when async complete ***** //
-  }
-
-  void getPostDetail(String gotPostURL) {
-    final addPostTopic = AddTopic(
-      topicPic: picPostURL!,
-      uID: userFirebase.uid,
+  void getUpdatePostDetail() {
+    final addPostTopic = UpdateTopic(
       topic: _controllerTopic.text,
       topicDetail: _controllerTopicDetail.text,
       datePost: DateTime.now(),
     );
-    createAddTopic(addPostTopic);
+    updateAddTopic(addPostTopic);
   }
 
-  Future createAddTopic(AddTopic userAddTopic) async {
-    final docTopic = FirebaseFirestore.instance.collection('postsell').doc();
+  Future updateAddTopic(UpdateTopic userUpdateTopic) async {
+    final docTopic =
+        FirebaseFirestore.instance.collection('postsell').doc(topicID);
     //add id from Firebase Auth id
-    userAddTopic.id = docTopic.id;
+    userUpdateTopic.id = docTopic.id;
     //userAddTopic.uID = userFirebase.uid;
     //userAddTopic.topicPic = picPostURL!;
 
-    final json = userAddTopic.toJson();
-    await docTopic.set(json);
+    final json = userUpdateTopic.toJson();
+    await docTopic.update(json);
   }
 
   Stream<List<TopicList>> readTopic() => FirebaseFirestore.instance
@@ -393,20 +296,16 @@ class _EditPostPage extends State<EditPostPage> {
           snapshot.docs.map((doc) => TopicList.fromJson(doc.data())).toList());
 }
 
-class AddTopic {
+class UpdateTopic {
   String id;
-  String uID;
-  String topicPic;
 
   final String topic;
   final String topicDetail;
 
   final DateTime datePost;
 
-  AddTopic({
+  UpdateTopic({
     this.id = '',
-    required this.uID,
-    this.topicPic = '',
     required this.topic,
     required this.topicDetail,
     required this.datePost,
@@ -414,8 +313,6 @@ class AddTopic {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'uID': uID,
-        'topicPic': topicPic,
         'topic': topic,
         'topicDetail': topicDetail,
         'datePost': datePost,

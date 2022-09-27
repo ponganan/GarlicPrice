@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garlic_price/auth_post_page.dart';
+import 'package:garlic_price/show_avatar_page.dart';
 
 import 'model/format_datetime.dart';
 import 'model/topic_list.dart';
@@ -101,10 +101,32 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
               const SizedBox(height: 15),
               Row(
                 children: [
-                  const Text(
-                    'หัวข้อ : ',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => new AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  content: Builder(
+                                    builder: (context) {
+                                      // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                      var height =
+                                          MediaQuery.of(context).size.height;
+                                      var width =
+                                          MediaQuery.of(context).size.width;
+
+                                      return Container(
+                                        height: height - 300,
+                                        //width: width - 150,
+                                      );
+                                    },
+                                  ),
+                                ));
+                      },
+                      child: ShowAvatarPage()),
+                  SizedBox(width: 5),
                   Expanded(
                     child: Text(
                       topic.topic,
