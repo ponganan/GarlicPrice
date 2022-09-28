@@ -53,6 +53,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
               return user == null
                   ? const Center(child: Text('No User'))
                   : buildUser(user);
+
               // : UserProfilePicture();
             } else {
               return userFirebase != null

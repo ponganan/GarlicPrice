@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:garlic_price/model/utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'main_page.dart';
 
@@ -8,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();

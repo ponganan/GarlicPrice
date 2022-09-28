@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garlic_price/auth_post_page.dart';
+import 'package:garlic_price/show_avatar_detail.dart';
 import 'package:garlic_price/show_avatar_page.dart';
+import 'package:garlic_price/user_detail_page.dart';
 
 import 'model/format_datetime.dart';
 import 'model/topic_list.dart';
@@ -16,6 +18,7 @@ class ListAllPostPage extends StatefulWidget {
 class _ListAllPostPageState extends State<ListAllPostPage> {
   //final userAccount = FirebaseAuth.instance.currentUser!;
   final FormatDatetime convertDatetime = FormatDatetime();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,31 +105,32 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
               Row(
                 children: [
                   GestureDetector(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (_) => new AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  content: Builder(
-                                    builder: (context) {
-                                      // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                                      var height =
-                                          MediaQuery.of(context).size.height;
-                                      var width =
-                                          MediaQuery.of(context).size.width;
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => new AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                content: Builder(
+                                  builder: (context) {
+                                    // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                    var height =
+                                        MediaQuery.of(context).size.height;
+                                    var width =
+                                        MediaQuery.of(context).size.width;
 
-                                      return Container(
+                                    return Container(
                                         height: height - 300,
                                         //width: width - 150,
-                                      );
-                                    },
-                                  ),
-                                ));
-                      },
-                      child: ShowAvatarPage()),
-                  SizedBox(width: 5),
+                                        child: ShowAvatarDetail(topic.uID));
+                                  },
+                                ),
+                              ));
+                    },
+                    child: ShowAvatarPage(topic.uID),
+                  ),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       topic.topic,

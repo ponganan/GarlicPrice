@@ -63,7 +63,12 @@ class _ListPriceState extends State<ListPrice> {
                 .formattedDate(price.dateTime.millisecondsSinceEpoch),
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          title: CircleAvatar(child: Text('${price.price}')),
+          title: CircleAvatar(
+              radius: 21,
+              child: Text(
+                '${price.price}',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              )),
 
           // subtitle: Text(user.city),
         ),
