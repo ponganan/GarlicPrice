@@ -1,7 +1,7 @@
 # Garlic Price ราคากระเทียมจีน
 
 Discover domestic price data for wholesale prices of Fresh Garlic <br>
-อัพเดตราคากระเทียมจีนทุกวัน
+ตรวจสอบราคากระเทียมจีน อัพเดตทุกวัน พร้อมแสดงกราฟราคา และ ประกาศซื้อ-ขาย กระเทียมจีน
 
 ## About Garlic Price
 
