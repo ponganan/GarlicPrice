@@ -2,7 +2,7 @@
 
 Discover domestic price data for wholesale prices of Fresh Garlic
 
-## Getting Started
+## About Garlic Price
 
 This project is a starting point for a Flutter application.
 
