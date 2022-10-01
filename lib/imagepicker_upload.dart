@@ -130,7 +130,7 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
               const SizedBox(
                 height: 20,
               ),
-              buildProgress(),
+              //buildProgress(),
             ],
           ),
         ),
@@ -145,6 +145,9 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
             final data = snapshot.data!;
             double progress = data.bytesTransferred / data.totalBytes;
             return Column(children: [
+              SizedBox(
+                height: 30,
+              ),
               SizedBox(
                 height: 50,
                 child: Stack(
@@ -171,7 +174,7 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 50,
               ),
               ElevatedButton.icon(
                 onPressed: () {
@@ -183,9 +186,9 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
                     ),
                   );
                 },
-                icon: const Icon(Icons.arrow_back_ios_new),
+                icon: const Icon(Icons.done),
                 label: const Text(
-                  'ย้อนกลับ',
+                  'OK',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -219,6 +222,26 @@ class _ImagePickerUploadState extends State<ImagePickerUpload> {
             ElevatedButton(
               onPressed: () {
                 uploadFile();
+                showDialog(
+                    context: this.context,
+                    builder: (_) => new AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          content: Builder(
+                            builder: (context) {
+                              // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                              var height = MediaQuery.of(context).size.height;
+                              var width = MediaQuery.of(context).size.width;
+
+                              return Container(
+                                height: height - 450,
+                                //width: width - 150,
+                                child: buildProgress(),
+                              );
+                            },
+                          ),
+                        ));
               },
               child: const Text(
                 'ยืนยัน',

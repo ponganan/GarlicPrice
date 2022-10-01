@@ -88,7 +88,7 @@ class _UploadProfilePictureState extends State<UploadProfilePicture> {
               const SizedBox(
                 height: 20,
               ),
-              buildProgress(),
+              //buildProgress(),
             ],
           ),
         ),

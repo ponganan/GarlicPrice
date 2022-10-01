@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:garlic_price/auth_post_page.dart';
 import 'package:garlic_price/show_avatar_detail.dart';
 import 'package:garlic_price/show_avatar_page.dart';
-import 'package:garlic_price/user_detail_page.dart';
 
 import 'model/format_datetime.dart';
 import 'model/topic_list.dart';
@@ -123,7 +122,9 @@ class _ListAllPostPageState extends State<ListAllPostPage> {
                                     return Container(
                                         height: height - 300,
                                         //width: width - 150,
-                                        child: ShowAvatarDetail(topic.uID));
+                                        child: ShowAvatarDetail(
+                                          topic.uID,
+                                        ));
                                   },
                                 ),
                               ));
