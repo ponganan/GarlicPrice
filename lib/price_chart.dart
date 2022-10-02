@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import 'line_titles.dart';
+import 'model/list_price_model.dart';
 
 class PriceChart extends StatelessWidget {
   PriceChart({Key? key}) : super(key: key);
