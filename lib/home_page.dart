@@ -3,6 +3,9 @@ import 'package:garlic_price/check_user_login_page.dart';
 import 'package:garlic_price/list_all_post_page.dart';
 import 'package:garlic_price/list_price.dart';
 import 'package:garlic_price/price_chart.dart';
+import 'package:garlic_price/price_chart_page.dart';
+
+import 'model/price_stats.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,7 +18,8 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
   final screen = [
     ListPrice(),
-    PriceChart(),
+    //PriceChart(),
+    PriceChartPage(),
     ListAllPostPage(),
     CheckUserLoginPage(),
   ];
