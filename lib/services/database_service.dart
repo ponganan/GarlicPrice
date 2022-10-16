@@ -8,7 +8,7 @@ class DatabaseService {
     return _firebaseFirestore
         .collection('price')
         .orderBy('datetime')
-        .limit(6)
+        .limitToLast(10)
         .get()
         .then((querySnapshot) => querySnapshot.docs
             .asMap()

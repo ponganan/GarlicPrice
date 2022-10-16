@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garlic_price/imagepicker_upload.dart';
-import 'package:garlic_price/upload_profile_picture.dart';
+
 import 'package:garlic_price/user_detail_page.dart';
 
 import 'home_page.dart';
@@ -56,9 +56,9 @@ class _UserProfilePage extends State<UserProfilePage> {
             final user = snapshot.data;
 
             _controllerName.text = user!.name!;
-            _controllerTel.text = user!.tel!;
-            _controllerCity.text = user!.city!;
-            getUserPic = user!.userPic!;
+            _controllerTel.text = user!.tel;
+            _controllerCity.text = user!.city;
+            getUserPic = user!.userPic;
             //print('test =$getUserPic');
 
             return user == null
@@ -187,7 +187,7 @@ class _UserProfilePage extends State<UserProfilePage> {
 
                     createUserAddUser(userAddUser);
 
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
                           return const UserDetailPage();
@@ -206,38 +206,38 @@ class _UserProfilePage extends State<UserProfilePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return const UserDetailPage();
-                      },
-                    ),
-                  );
-                },
-                color: Colors.green[200],
-                child: const Text(
-                  'รายละเอียดบัญชี',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            // const SizedBox(height: 10),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            //   child: MaterialButton(
+            //     onPressed: () {
+            //       Navigator.of(context).pushReplacement(
+            //         MaterialPageRoute(
+            //           builder: (BuildContext context) {
+            //             return const UserDetailPage();
+            //           },
+            //         ),
+            //       );
+            //     },
+            //     color: Colors.green[200],
+            //     child: const Text(
+            //       'รายละเอียดบัญชี',
+            //       style: TextStyle(
+            //         fontSize: 18,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (BuildContext context) {
-                        return HomePage();
+                        return const HomePage();
                       },
                     ),
                   );

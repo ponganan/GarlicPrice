@@ -187,7 +187,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
                           return const UserProfilePage();
@@ -210,7 +210,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
                           return const HomePage();

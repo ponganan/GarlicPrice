@@ -15,19 +15,8 @@ class PriceStats {
 
   factory PriceStats.fromSnapshot(DocumentSnapshot snap, int index) {
     return PriceStats(
-        dateTime: snap['datetime'].toDate, index: index, price: snap['price']);
+        dateTime: snap['datetime'].toDate(),
+        index: index,
+        price: snap['price']);
   }
-
-  static final List<PriceStats> data = [
-    PriceStats(dateTime: DateTime.now(), index: 0, price: 38),
-    PriceStats(dateTime: DateTime.now(), index: 1, price: 20),
-    PriceStats(dateTime: DateTime.now(), index: 2, price: 33),
-    PriceStats(dateTime: DateTime.now(), index: 3, price: 56),
-    PriceStats(dateTime: DateTime.now(), index: 4, price: 49),
-    PriceStats(dateTime: DateTime.now(), index: 5, price: 42),
-    PriceStats(dateTime: DateTime.now(), index: 6, price: 50),
-    PriceStats(dateTime: DateTime.now(), index: 7, price: 51),
-    PriceStats(dateTime: DateTime.now(), index: 8, price: 47),
-    PriceStats(dateTime: DateTime.now(), index: 9, price: 45),
-  ];
 }

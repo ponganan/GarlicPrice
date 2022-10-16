@@ -4,10 +4,16 @@ import 'package:garlic_price/model/price_stats.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-class PriceChartPage extends StatelessWidget {
+class PriceChartPage extends StatefulWidget {
   PriceChartPage({Key? key}) : super(key: key);
 
+  @override
+  State<PriceChartPage> createState() => _PriceChartPageState();
+}
+
+class _PriceChartPageState extends State<PriceChartPage> {
   final PriceStatsController priceStatsController =
       Get.put(PriceStatsController());
 
@@ -62,7 +68,7 @@ class PriceChartPage extends StatelessWidget {
   }
 }
 
-class CustomBarChart extends StatelessWidget {
+class CustomBarChart extends StatefulWidget {
   const CustomBarChart({
     Key? key,
     required this.priceStats,
@@ -71,12 +77,18 @@ class CustomBarChart extends StatelessWidget {
   final List<PriceStats> priceStats;
 
   @override
+  State<CustomBarChart> createState() => _CustomBarChartState();
+}
+
+class _CustomBarChartState extends State<CustomBarChart> {
+  @override
   Widget build(BuildContext context) {
     List<charts.Series<PriceStats, String>> series = [
       charts.Series(
         id: 'price',
-        data: priceStats,
-        domainFn: (series, _) => series.index.toString(),
+        data: widget.priceStats,
+        domainFn: (series, _) =>
+            DateFormat.d().format(series.dateTime).toString(),
         measureFn: (series, _) => series.price,
         colorFn: (series, _) => series.barColor!,
       )

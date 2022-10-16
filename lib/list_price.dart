@@ -79,6 +79,7 @@ class _ListPriceState extends State<ListPrice> {
       .collection('price')
       //sort datetime
       .orderBy('datetime', descending: true)
+      .limit(31)
       .snapshots()
       .map((snapshot) => snapshot.docs
           .map((doc) => ListPriceModel.fromJson(doc.data()))
