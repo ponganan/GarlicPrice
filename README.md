@@ -12,7 +12,7 @@ This project is a starting point for a Flutter application.
 
 
 
-- Building application with Flutter 3.3.2
+- Building application with Flutter 3.3.4
 - Use all Firebase CRUD operations for the Flutter Firestore database to write data, read data, update data and delete data
 - Use Firebase Authentation with Flutter to SignIn, SignUp, Reset Password and Verify Email inside application
 - Use GetX, Firebase Cloud Firestore, and the package charts_flutter to build a price chart
