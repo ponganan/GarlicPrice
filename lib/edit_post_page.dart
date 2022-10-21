@@ -278,8 +278,8 @@ class _EditPostPage extends State<EditPostPage> {
 
   Stream<List<TopicList>> readTopic() => FirebaseFirestore.instance
       .collection('postsell')
+      .orderBy('datePost', descending: true)
       .where('uID', isEqualTo: userFirebase.uid)
-      //.orderBy('datePost', descending: true)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => TopicList.fromJson(doc.data())).toList());

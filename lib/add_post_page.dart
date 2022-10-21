@@ -143,7 +143,7 @@ class _AddPostPage extends State<AddPostPage> {
                     } else {
                       uploadFile();
                     }
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
                           return const ListAllPostPage();

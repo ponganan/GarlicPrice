@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garlic_price/home_page.dart';
@@ -49,7 +50,23 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
     if (isEmailVerified) {
       timer?.cancel();
+      final firstTimeUserID = FirstTimeUserID();
+
+      createFirstTimeUserID(firstTimeUserID);
     }
+  }
+
+  Future createFirstTimeUserID(FirstTimeUserID addFirstTimeUser) async {
+    final userFirebase = FirebaseAuth.instance.currentUser!;
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc(userFirebase.uid);
+    //add id from Firebase Auth id
+    addFirstTimeUser.id = docUser.id;
+
+    //userAddUser.id = userFirebase.uid;
+
+    final json = addFirstTimeUser.toJsonFirstTimeID();
+    await docUser.set(json);
   }
 
   Future sendVerificationEmail() async {
@@ -112,4 +129,30 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
             ),
           ),
         );
+}
+
+class FirstTimeUserID {
+  String id;
+  String userPic;
+  String name;
+  String tel;
+  String city;
+  String imagePath;
+
+  FirstTimeUserID({
+    this.id = '',
+    this.userPic = '',
+    this.name = '',
+    this.tel = '',
+    this.city = '',
+    this.imagePath = '',
+  });
+  Map<String, dynamic> toJsonFirstTimeID() => {
+        'id': id,
+        'userpic': userPic,
+        'name': name,
+        'tel': tel,
+        'city': city,
+        'imagePath': imagePath,
+      };
 }
